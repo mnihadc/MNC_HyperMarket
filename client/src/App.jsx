@@ -1,5 +1,4 @@
-import React from 'react';
-import './App.css'
+import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './Pages/Home';
 import SignIn from './Pages/SignIn';
@@ -8,11 +7,13 @@ import Profile from './Pages/Profile';
 import About from './Pages/About';
 import Cart from './Pages/Cart';
 import Order from './Pages/Order';
+import Header from './Components/Header';
 
 function App() {
 
   return (
     <BrowserRouter>
+      <Header />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/sign-in' element={<SignIn />} />
