@@ -40,7 +40,7 @@ function SignUp() {
   }
   return (
     <div className='p-1' style={{ background: "#84fab0",height:"42rem" }}>
-      <div className='p-10 mt-10 max-w-lg mx-auto rounded-lg ' style={{ marginTop: "7rem", background: "#39383d" }}>
+      <div className='p-10 mt-10 max-w-lg mx-auto border rounded-lg ' style={{ marginTop: "7rem", background: "#39383d" }}>
         <h1 className='text-3xl text-center font-semibold text-white my-7'>Sign-Up</h1>
         <form action="" onSubmit={handleSubmit} className='flex flex-col gap-4'>
           <input onChange={handleChange} type="text" id='username' placeholder='username' className='border p-3 rounded-lg' />
