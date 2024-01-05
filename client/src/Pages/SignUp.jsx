@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import OAuth from '../Components/OAuth';
 
 function SignUp() {
   const [formData, setFormData] = useState({});
@@ -39,7 +40,7 @@ function SignUp() {
     }
   }
   return (
-    <div className='p-1' style={{ background: "#84fab0",height:"42rem" }}>
+    <div className='p-1' style={{ background: "#84fab0", height: "42rem" }}>
       <div className='p-10 mt-10 max-w-lg mx-auto border rounded-lg ' style={{ marginTop: "7rem", background: "#39383d" }}>
         <h1 className='text-3xl text-center font-semibold text-white my-7'>Sign-Up</h1>
         <form action="" onSubmit={handleSubmit} className='flex flex-col gap-4'>
@@ -47,6 +48,7 @@ function SignUp() {
           <input onChange={handleChange} type="email" id='email' placeholder='email' className='border p-3 rounded-lg' />
           <input onChange={handleChange} type="password" id='password' placeholder='password' className='border p-3 rounded-lg' />
           <button className='bg-green-700 font-semibold  rounded-lg uppercase p-3 hover:opacity-95 disabled:opacity-80 text-white'>{loading ? 'loading...' : 'Sign-Up'}</button>
+          <OAuth />
         </form>
         <div className='flex gap-2 mt-5 text-white'>
           <p>Have a account?</p>
