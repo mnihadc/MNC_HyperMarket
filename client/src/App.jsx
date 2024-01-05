@@ -8,6 +8,7 @@ import About from './Pages/About';
 import Cart from './Pages/Cart';
 import Order from './Pages/Order';
 import Header from './Components/Header';
+import PrivateRoute from './Components/PrivateRoute';
 
 function App() {
 
@@ -19,9 +20,11 @@ function App() {
         <Route path='/sign-in' element={<SignIn />} />
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/about' element={<About />} />
-        <Route path='/profile' element={<Profile />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/order' element={<Order />} />
+        <Route element={<PrivateRoute />}>
+          <Route path='/profile' element={<Profile />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )
