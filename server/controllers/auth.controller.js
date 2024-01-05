@@ -36,7 +36,7 @@ export const signIn = async (req, res, next) => {
 
 export const google = async (req, res, next) => {
     try {
-        const user = await user.findOne({ email: req.body.email });
+        const user = await User.findOne({ email: req.body.email });
         if (user) {
             const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
             const { password: pass, ...rest } = user._doc;
@@ -50,7 +50,7 @@ export const google = async (req, res, next) => {
             const newUser = new User({
                 username: req.body.name.split("").join("").toLowerCase() + Math.random().toString(36).slice(-4),
                 email: req.body.email,
-                password: hashedPassword.slice, avatar: req.body.photo
+                password: hashedPassword, avatar: req.body.photo
             });
             await newUser.save();
             const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
