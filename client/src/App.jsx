@@ -9,6 +9,7 @@ import Cart from './Pages/Cart';
 import Order from './Pages/Order';
 import Header from './Components/Header';
 import PrivateRoute from './Components/PrivateRoute';
+import UserHeader from './Components/UserHeader';
 
 function App() {
 
@@ -22,12 +23,11 @@ function App() {
         <Route path='/about' element={<About />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/order' element={<Order />} />
-
         <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
         </Route>
-
       </Routes>
+      <UserHeader />
     </BrowserRouter>
   )
 }
