@@ -11,6 +11,7 @@ import Header from './Components/Header';
 import PrivateRoute from './Components/PrivateRoute';
 import UserHeader from './Components/UserHeader';
 import CreateAddress from './Pages/CreateAddress';
+import Address from './Pages/Address';
 
 function App() {
 
@@ -24,7 +25,8 @@ function App() {
         <Route path='/about' element={<About />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/order' element={<Order />} />
-        <Route path='/createAddress' element={<CreateAddress />} />
+        <Route path='/create-address' element={<CreateAddress />} />
+        <Route path='/address' element={<Address />} />
         <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
         </Route>
