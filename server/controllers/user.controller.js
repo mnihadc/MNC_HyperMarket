@@ -1,6 +1,7 @@
 import { handleError } from "../utils/error.js";
 import bcryptjs from "bcryptjs";
 import User from "../models/user.model.js";
+import Address from "../models/address.modal.js";
 
 export const updateUser = async (req, res, next) => {
     if (req.user.id !== req.params.id) return next(handleError(401, "You can only update your own account"));
@@ -38,6 +39,15 @@ export const deleteUser = async (req, res, next) => {
 
         res.clearCookie('access_token');
         res.status(200).json('User has been deleted!');
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const createAddress = async (req, res, next) => {
+    try {
+        const createAddress = await Address.create(req.body);
+        return res.status(201).json(createAddress);
     } catch (error) {
         next(error);
     }
