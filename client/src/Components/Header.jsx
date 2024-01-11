@@ -11,7 +11,7 @@ function Header() {
                 <Link to='/'>
                     <h1 className='font-semibold text-xl lg:text-4xl xl:text-4xl text-white' style={{ marginLeft: '1rem', sm: '2rem', lg: '4rem' }}>
                         <span className='sm:text-xl lg:text-3xl xl:text-4xl text-green-500'>MNC</span>
-                        <span className='text-sm lg:text-base text-slate-600'>_Shopping-Cart</span>
+                        <span className='text-sm lg:text-base text-slate-600'>_HyperMarket</span>
                     </h1>
                 </Link>
                 <ul className='flex gap-3'>
