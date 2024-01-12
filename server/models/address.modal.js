@@ -1,7 +1,11 @@
 import mongoose from 'mongoose';
 
 const addressSchema = new mongoose.Schema({
-    fullName: {
+    firstName: {
+        type: String,
+        required: true,
+    },
+    lastName: {
         type: String,
         required: true,
     },
@@ -37,9 +41,7 @@ const addressSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-},
-    { timestamps: true }
-);
+}, { timestamps: true });
 
 const Address = mongoose.model('Address', addressSchema);
 
