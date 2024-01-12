@@ -53,22 +53,4 @@ export const createAddress = async (req, res, next) => {
     }
 };
 
-export const updateListing = async (req, res, next) => {
-    const createAddress = await Address.findById(req.params.id);
-    if (!createAddress) {
-        return next(handleError(404, 'Listing not found'));
-    }
-    if (req.user.id !== createAddress.userRef) {
-        return next(handleError(401, 'You only update your own listings!'));
-    }
-    try {
-        const updatedAddress = await Address.findById(
-            req.params.id,
-            req.body,
-            { new: true }
-        );
-        res.status(200).json(updatedAddress);
-    } catch (error) {
-        next(error);
-    }
-}
+
