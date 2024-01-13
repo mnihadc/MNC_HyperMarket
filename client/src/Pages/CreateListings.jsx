@@ -17,11 +17,11 @@ function CreateListings() {
                 </div>
                 <div className='mb-4'>
                     <input
-                        type='number'
-                        id='offerPrice'
-                        name='offerPrice'
-                        placeholder='Offer Price'
-                        className='shadow appearance-none border-2 border-gray-300  rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                        type='text'
+                        id='productCategory'
+                        name='productCategory'
+                        placeholder='Product Category'
+                        className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                         required
                     />
                 </div>
@@ -38,9 +38,29 @@ function CreateListings() {
                 <div className='mb-4'>
                     <input
                         type='number'
+                        id='offerPrice'
+                        name='offerPrice'
+                        placeholder='Offer Price'
+                        className='shadow appearance-none border-2 border-gray-300  rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                        required
+                    />
+                </div>
+                <div className='mb-4'>
+                    <input
+                        type='number'
                         id='quantity'
                         name='quantity'
                         placeholder='Quantity'
+                        className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                        required
+                    />
+                </div>
+                <div className='mb-4'>
+                    <input
+                        type='text'
+                        id='description'
+                        name='description'
+                        placeholder='Short description'
                         className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                         required
                     />
@@ -54,7 +74,7 @@ function CreateListings() {
                         <input className='p-3 border border-gray-300 rounded w-full' type="file" id='images' accept='image/*' multiple />
                         <button className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'>Upload</button>
                     </div>
-                    <button className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>Create Listing</button>
+                    <button className='p-3 pb-3 mb-14 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>Create Listing</button>
                 </div>
             </form>
         </div>
