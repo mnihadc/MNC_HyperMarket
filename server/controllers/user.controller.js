@@ -57,7 +57,7 @@ export const getAddress = async (req, res, next) => {
     if (req.user.id === req.params.id) {
         try {
             const address = await Address.find({ userRef: req.params.id });
-            res.status(200).json(address);
+            res.status(200).json({ success: true, addresses: address });
         } catch (error) {
             next(error);
         }
