@@ -14,7 +14,6 @@ export const signUp = async (req, res, next) => {
         next(error);
     }
 }
-
 export const signIn = async (req, res, next) => {
     const { email, password } = req.body;
     try {
@@ -26,11 +25,12 @@ export const signIn = async (req, res, next) => {
             }
 
             const token = jwt.sign({ email, isAdmin: true }, process.env.JWT_SECRET);
-
+            const username = "Muhammed Nihad C (Admin)";
+            const avatarPath = "mnc-image.jpg";
             return res
                 .cookie('access_token', token, { httpOnly: true })
                 .status(200)
-                .json({ email, isAdmin: true });
+                .json({ email, username, avatar: avatarPath, isAdmin: true });
         }
 
         const validUser = await User.findOne({ email });

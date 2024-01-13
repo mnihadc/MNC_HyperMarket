@@ -12,6 +12,7 @@ import PrivateRoute from './Components/PrivateRoute';
 import UserHeader from './Components/UserHeader';
 import CreateAddress from './Pages/CreateAddress';
 import Address from './Pages/Address';
+import CreateListings from './Pages/CreateListings';
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
         <Route path='/order' element={<Order />} />
         <Route path='/create-address' element={<CreateAddress />} />
         <Route path='/address' element={<Address />} />
+        <Route path='/create-listings' element={<CreateListings />} />
         <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
         </Route>

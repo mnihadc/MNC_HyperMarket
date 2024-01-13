@@ -30,6 +30,13 @@ function Header() {
                     </Link>
                 </ul>
             </div>
+            {isAdmin ? (
+                <div className='admin-specific-content'>
+                    <Link to='create-listings'>
+                        <marquee behavior="1rem" direction="" className='bg-red-800 text-green-500 font-bold'>Create listings</marquee>
+                    </Link>
+                </div>
+            ) : null}
         </header>
     );
 }
