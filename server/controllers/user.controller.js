@@ -53,4 +53,16 @@ export const createAddress = async (req, res, next) => {
     }
 };
 
+export const getAddress = async (req, res, next) => {
+    if (req.user.id === req.params.id) {
+        try {
+            const address = await Address.find({ userRef: req.params.id });
+            res.status(200).json(address);
+        } catch (error) {
+            next(error);
+        }
+    } else {
+        return next(handleError(401, 'You can only view your own addresses!'));
+    }
+}
 
