@@ -1,10 +1,6 @@
 import mongoose from 'mongoose';
 
 const listingSchema = new mongoose.Schema({
-    image: {
-        type: String,
-        required: true,
-    },
     offerPrice: {
         type: Number,
         required: true,
@@ -14,7 +10,7 @@ const listingSchema = new mongoose.Schema({
         required: true,
     },
     quantity: {
-        type: Number,
+        type: String,
         required: true,
     },
     productName: {
@@ -28,10 +24,6 @@ const listingSchema = new mongoose.Schema({
     description: {
         type: String,
         required: true,
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
     },
 }, { timestamps: true });
 

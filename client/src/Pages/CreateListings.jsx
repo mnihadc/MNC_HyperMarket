@@ -2,15 +2,24 @@ import React from 'react';
 import { useState } from 'react';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../firebase";
+import { useNavigate } from 'react-router-dom';
 
 function CreateListings() {
     const [files, setFiles] = useState([]);
+    const navigate = useNavigate()
     const [formData, setFormData] = useState({
         imageUrls: [],
+        offerPrice: '',
+        mrp: '',
+        description: '',
+        quantity: '',
+        productName: '',
+        productCategory: '',
     });
     const [imageUploadError, setImageUploadError] = useState(false);
     const [uploading, setUploading] = useState(false);
-    console.log(formData);
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleImageSubmit = (e) => {
         if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
@@ -65,10 +74,48 @@ function CreateListings() {
         });
     };
 
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value
+        })
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            if (formData.imageUrls.length < 1) return setError('You must upload at least one image');
+            setLoading(true);
+
+            setError(false);
+            const res = await fetch('/api/listing/create-listings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...formData
+                }),
+            });
+            const data = await res.json();
+
+            if (data.success === false) {
+                setError(data.message);
+                setLoading(false);
+                return;
+            }
+            navigate('/')
+            setLoading(false);
+        } catch (error) {
+            setError(error.message)
+            setLoading(false);
+        }
+    }
+
     return (
         <div className='p-8 pt-24'>
             <h1 className='text-center text-2xl font-bold text-slate-700'>Create Listings</h1>
-            <form className='max-w-md mx-auto mt-8'>
+            <form onSubmit={handleSubmit} className='max-w-md mx-auto mt-8'>
                 <div className='mb-4'>
                     <input
                         type='text'
@@ -77,6 +124,7 @@ function CreateListings() {
                         placeholder='Product Name'
                         className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                         required
+                        onChange={handleChange}
                     />
                 </div>
                 <div className='mb-4'>
@@ -87,6 +135,7 @@ function CreateListings() {
                         placeholder='Product Category'
                         className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                         required
+                        onChange={handleChange}
                     />
                 </div>
                 <div className='mb-4'>
@@ -97,6 +146,7 @@ function CreateListings() {
                         placeholder='MRP'
                         className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                         required
+                        onChange={handleChange}
                     />
                 </div>
                 <div className='mb-4'>
@@ -107,16 +157,18 @@ function CreateListings() {
                         placeholder='Offer Price'
                         className='shadow appearance-none border-2 border-gray-300  rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                         required
+                        onChange={handleChange}
                     />
                 </div>
                 <div className='mb-4'>
                     <input
-                        type='number'
+                        type='text'
                         id='quantity'
                         name='quantity'
                         placeholder='Quantity'
                         className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                         required
+                        onChange={handleChange}
                     />
                 </div>
                 <div className='mb-4'>
@@ -127,6 +179,7 @@ function CreateListings() {
                         placeholder='Short description'
                         className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                         required
+                        onChange={handleChange}
                     />
                 </div>
 
@@ -147,7 +200,8 @@ function CreateListings() {
                             </div>
                         ))
                     }
-                    <button className='p-3 pb-3 mb-14 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>Create Listing</button>
+                    <button disabled={loading || uploading} className='p-3 pb-3 mb-14 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>{loading ? 'Creating...' : 'Create Listing'}</button>
+                    {error && <p className='text-red-700 text-sm'>{error}</p>}
                 </div>
             </form>
         </div>
