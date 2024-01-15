@@ -19,11 +19,8 @@ function SwiperImage() {
                                 style={{
                                     background: `url(${url}) center no-repeat`,
                                     backgroundSize: 'cover',
-                                    marginTop: '28px',
-                                    height: '200px', // Default size for mobile
-                                    ...(window.innerWidth >= 768 && { // Check for window width
-                                        height: `${width}px`, // Larger size for computers
-                                    }),
+                                    marginTop: '20px',
+                                    height: '200px',
                                 }}
                             ></div>
                         </SwiperSlide>
