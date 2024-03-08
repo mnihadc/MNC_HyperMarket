@@ -4,10 +4,10 @@ import SwiperImage from '../Components/SwiperImage';
 
 function Home() {
     return (
-        <div className="container mx-auto my-8">
+        <div className="mx-auto">
             <SwiperImage />
-            <div className="mt-8 p-2">
-                <h2 className="text-2xl font-semibold mb-4 ">Featured Listings</h2>
+            <div className="mt-1 p-1">
+                <h2 className="text-2xl font-semibold">Today Offer's</h2>
                 <SupermarketListing />
             </div>
         </div>

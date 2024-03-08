@@ -21,6 +21,7 @@ function SwiperImage() {
                                     backgroundSize: 'cover',
                                     marginTop: '20px',
                                     height: '200px',
+                                    border:0,
                                 }}
                             ></div>
                         </SwiperSlide>
