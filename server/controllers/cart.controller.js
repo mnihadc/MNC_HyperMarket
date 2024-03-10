@@ -3,23 +3,25 @@ import { handleError } from "../utils/error.js";
 
 export const addToCart = async (req, res, next) => {
     try {
-        const { productId, quantity } = req.body;
-        const userId = req.user.id; 
+        const { userId, productId } = req.params;
+        const { quantity } = req.body;
 
         if (!productId || !quantity || isNaN(quantity) || quantity <= 0 || !userId) {
-            return next(handleError(404, "invalid request data."));
+            return next(handleError(400, "Invalid request data."));
         }
 
-        const existingCartItem = await Cart.findOne({ productId, user: userId });
+        const existingCartItem = await Cart.findOne({ productId, userId });
 
         if (existingCartItem) {
-            return next(handleError(404, "Product is already in the cart."));
+            return next(handleError(400, "Product is already in the cart."));
         }
 
-        const newCartItem = await Cart.create({ productId, quantity, user: userId });
+        const newCartItem = await Cart.create({ productId, quantity, userId });
+        
+
         res.status(201).json(newCartItem);
     } catch (error) {
         console.error('Error adding product to cart:', error);
-        next(error);
+        next(handleError(500, "Internal Server Error"));
     }
-}
+};

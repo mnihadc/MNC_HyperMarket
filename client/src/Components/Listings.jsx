@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const SupermarketListing = () => {
     const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
+    const [cart, setCart] = useState([]);
+    const { currentUser } = useSelector((state) => state.user);
 
     useEffect(() => {
         const fetchListing = async () => {
@@ -28,6 +31,25 @@ const SupermarketListing = () => {
         fetchListing();
     }, []);
 
+    const handleAdToCart = async (productId) => {
+        try {
+            const res = await fetch(`/api/cart/addtocart/${currentUser._id}/${productId}`,{
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    quantity: 1, 
+                }),
+            })
+            const data = await res.json();
+            setCart([...cart, data]);
+        } catch (error) {
+            console.error("Error adding to cart:", error)
+        
+        }
+    }
+
     const renderListings = () => {
         if (!listing) {
             return null;
@@ -39,7 +61,7 @@ const SupermarketListing = () => {
             const row = (
                 <div className="flex justify-between mt-2" key={`row-${i / 3}`}>
                     {rowListings.map((product) => (
-                        <div key={product.id} className="card bg-slate-200" style={{ width: "30%", height: "220px" }}>
+                        <div key={product._id} className="card bg-slate-200" style={{ width: "30%", height: "220px" }}>
                             <img src={product.imageUrls} className="card-img-top" alt={product.productName} style={{ height: "105px", objectFit: "contain" }} />
                             <div className="p-1" style={{ height: "70px", display: "flex", justifyContent: "center", alignItems: "center" }}>
                                 <p className="card-title font-semibold text-1xl" style={{ overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitBoxOrient: "vertical", maxHeight: "4em" }}>
@@ -47,7 +69,7 @@ const SupermarketListing = () => {
                                 </p>
                             </div>
                             <hr />
-                            <button className={`btn btn-success justify-center p-1`} style={{ height: "40px" }}>
+                            <button className={`btn btn-success justify-center p-1`} onClick={()=>handleAdToCart(product._id)} style={{ height: "40px" }}>
                                 Add to cart
                             </button>
                         </div>
