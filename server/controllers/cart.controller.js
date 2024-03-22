@@ -17,7 +17,7 @@ export const addToCart = async (req, res, next) => {
         }
 
         const newCartItem = await Cart.create({ productId, quantity, userId });
-        
+
 
         res.status(201).json(newCartItem);
     } catch (error) {
@@ -25,3 +25,16 @@ export const addToCart = async (req, res, next) => {
         next(handleError(500, "Internal Server Error"));
     }
 };
+
+export const getCartbyuserId = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+        const cartData = await Cart.find({ userId });
+        const productIds = cartData.map(item => item.productId);
+        res.status(200).json(productIds);
+    } catch (error) {
+        console.error('Error fetching cart data:', error);
+        next(handleError(500, 'Internal Server Error'));
+    }
+};
+

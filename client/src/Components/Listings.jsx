@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import {  useNavigate } from 'react-router-dom';
 
 const SupermarketListing = () => {
     const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(false);
+    
+    const navigate = useNavigate();
     const [error, setError] = useState(false);
     const [cart, setCart] = useState([]);
+    const [productsInCart, setProductsInCart] = useState([]);
     const { currentUser } = useSelector((state) => state.user);
 
     useEffect(() => {
@@ -19,11 +23,12 @@ const SupermarketListing = () => {
                     setLoading(false);
                     return;
                 }
+
                 setListing(data);
-                setLoading(false);
-                setError(false);
             } catch (error) {
+                console.error("Error loading listings:", error);
                 setError(true);
+            } finally {
                 setLoading(false);
             }
         };
@@ -33,20 +38,23 @@ const SupermarketListing = () => {
 
     const handleAdToCart = async (productId) => {
         try {
-            const res = await fetch(`/api/cart/addtocart/${currentUser._id}/${productId}`,{
+            if(!currentUser){
+                navigate('/sign-in');
+            }
+            const res = await fetch(`/api/cart/addtocart/${currentUser._id}/${productId}`, {
                 method: 'POST',
                 headers: {
                     'Content-type': 'application/json',
                 },
                 body: JSON.stringify({
-                    quantity: 1, 
+                    quantity: 1,
                 }),
             })
             const data = await res.json();
-            setCart([...cart, data]);
+            setCart(prevCart => [...prevCart, data]);
         } catch (error) {
             console.error("Error adding to cart:", error)
-        
+
         }
     }
 
@@ -68,9 +76,13 @@ const SupermarketListing = () => {
                                     {product.productName}
                                 </p>
                             </div>
+                            
                             <hr />
-                            <button className={`btn btn-success justify-center p-1`} onClick={()=>handleAdToCart(product._id)} style={{ height: "40px" }}>
-                                Add to cart
+                            <button
+                                className={`btn btn-success justify-center p-1`}
+                                onClick={() => handleAdToCart(product._id)}
+                                style={{ height: "40px", backgroundColor: productsInCart.includes(product._id) ? 'blue' : 'green' }}>
+                                {productsInCart.includes(product._id) ? 'In Cart' : 'Add to Cart'}
                             </button>
                         </div>
                     ))}
