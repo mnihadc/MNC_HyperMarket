@@ -28,13 +28,11 @@ export const addToCart = async (req, res, next) => {
 
 export const getCartbyuserId = async (req, res, next) => {
     try {
-        const { userId } = req.params;
-        const cartData = await Cart.find({ userId });
-        const productIds = cartData.map(item => item.productId);
-        res.status(200).json(productIds);
+        const cart = await Cart.find();
+        res.status(200).json(cart);
     } catch (error) {
-        console.error('Error fetching cart data:', error);
-        next(handleError(500, 'Internal Server Error'));
+        next(error);
+
     }
 };
 
