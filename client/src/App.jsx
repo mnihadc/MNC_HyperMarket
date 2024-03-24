@@ -13,6 +13,7 @@ import UserHeader from './Components/UserHeader';
 import CreateAddress from './Pages/CreateAddress';
 import Address from './Pages/Address';
 import CreateListings from './Pages/CreateListings';
+import Responsive from './Components/Responsive';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
         <Route path='/about' element={<About />} />
         <Route path='/cart' element={<Cart />} />
         <Route path='/order' element={<Order />} />
+        <Route path="/responsive" component={Responsive} />
         <Route path='/create-address' element={<CreateAddress />} />
         <Route path='/address' element={<Address />} />
         <Route path='/create-listings' element={<CreateListings />} />
@@ -33,6 +35,7 @@ function App() {
           <Route path='/profile' element={<Profile />} />
         </Route>
       </Routes>
+      
       <UserHeader />
     </BrowserRouter>
   )
