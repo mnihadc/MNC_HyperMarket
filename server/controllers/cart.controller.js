@@ -1,4 +1,5 @@
 import Cart from "../models/cart.modal.js";
+import Listing from "../models/listing.modal.js";
 import { handleError } from "../utils/error.js";
 
 export const addToCart = async (req, res, next) => {
@@ -35,4 +36,12 @@ export const getCartbyuserId = async (req, res, next) => {
 
     }
 };
+export const getCartProduct = async (req, res, next) => {
+    try {
+        const CartProduct = await Listing.find();
+        res.status(200).json(CartProduct);
+    } catch (error) {
+        next(error);
 
+    }
+};
