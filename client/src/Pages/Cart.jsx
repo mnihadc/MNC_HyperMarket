@@ -5,10 +5,13 @@ import { useMediaQuery } from 'react-responsive';
 function Cart() {
   const { currentUser } = useSelector((state) => state.user);
   const [filteredCartItems, setFilteredCartItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [loading, setLoading] = useState(false);
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
   useEffect(() => {
     const fetchCart = async () => {
+      setLoading(true);
       try {
         const cartRes = await fetch('/api/cart/getCart');
         const productRes = await fetch('/api/cart/getCartProduct');
@@ -25,50 +28,96 @@ function Cart() {
             }
           }).filter(Boolean);
           setFilteredCartItems(filteredItems);
+          const total = filteredItems.reduce((acc, item) => acc + item.offerPrice, 0);
+          setTotalPrice(total);
         } else {
           setFilteredCartItems([]);
+          setTotalPrice(0);
         }
       } catch (error) {
         console.error("Error loading in Cart:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchCart();
   }, [currentUser]);
 
+  const increaseQuantity = (itemId) => {
+    const updatedCartItems = filteredCartItems.map(item => {
+      if (item._id === itemId) {
+        return { ...item, cartQuantity: item.cartQuantity + 1 };
+      }
+      return item;
+    });
+    setFilteredCartItems(updatedCartItems);
+  };
+
+  const decreaseQuantity = (itemId) => {
+    const updatedCartItems = filteredCartItems.map(item => {
+      if (item._id === itemId && item.cartQuantity > 1) {
+        return { ...item, cartQuantity: item.cartQuantity - 1 };
+      }
+      return item;
+    });
+    setFilteredCartItems(updatedCartItems);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className='pt-20'>
-      <h1>Cart Page</h1>
       <div className='container m-auto mt-2'>
-        <div className='table-responsive'>
-          <table className={`table table-hover ${isMobile ? 'table-mobile' : 'table-desktop'}`}>
-            <thead className='text-success fs-4'>
-              <tr>
-                <th scope='col'>#</th>
-                <th scope='col'>Name</th>
-                <th scope='col'>Quantity</th>
-                <th scope='col'>Size</th>
-                <th scope='col'>Amount</th>
-                <th scope='col'>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCartItems.map((item, index) => (
-                <tr key={item._id}>
-                  <td>{index + 1}</td>
-                  <td>{item.productName}</td>
-                  <td>{item.cartQuantity}</td>
-                  <td>{item.quantity}</td>
-                  <td>${item.mrp}</td>
-                  <td><button type='button' className='btn p-0'><img src='' alt='delete' />remove</button></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div><h1 className='fs-2'>Total Price: 25531465/-</h1></div>
-        <div>
-          <button className='btn bg-success mt-5'>Check Out</button>
+        {filteredCartItems.length === 0 ? (
+          <div className='text-2xl p-5 font-semibold text-blue'>No items in cart</div>
+        ) : (
+          <div className='row row-cols-1 row-cols-md-3'>
+            {filteredCartItems.map((item) => (
+              <div key={item._id} className={`col p-1 ${isMobile ? 'mb-3' : ''}`}>
+                <div className='card p-2 bg-slate-100'>
+                  <div className='flex'>
+                    <img src={item.imageUrls} className='card-img-top w-24 h-24' alt='Default' />
+                    <div className='p-2'>
+                      <h3 className='card-title font-semibold'>{item.productName}</h3>
+                      <p className='card-text'>Description: {item.description}</p>
+                      <p className='card-text'>Size: {item.quantity}</p>
+                    </div>
+                  </div>
+                  <div className='card-body flex gap-3'>
+                    <div>
+                      <div className=''>
+                        <p className='card-text'>
+                          Quantity:
+                          <span style={{ marginRight: '5px' }}></span>
+                          <span className='quantity-button' style={{ marginRight: '5px', width: '20px', height: '20px', backgroundColor: '#006400', color: '#ffffff', borderRadius: '50%', display: 'inline-flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer' }} onClick={() => decreaseQuantity(item._id)}>-</span>
+                          {item.cartQuantity}
+                          <span className='quantity-button' style={{ marginLeft: '5px', marginRight: '5px', width: '20px', height: '20px', backgroundColor: '#006400', color: '#ffffff', borderRadius: '50%', display: 'inline-flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer' }} onClick={() => increaseQuantity(item._id)}>+</span>
+                        </p>
+                      </div>
+                      <div className='flex gap-2'>
+                        <p className='card-text text-decoration-line-through'>MRP: ₹{item.mrp}</p>
+                        <p className='card-text font-semibold'>MRP: ₹{item.offerPrice}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <button type='button' className='bg-slate-500 rounded-lg text-white w-20 h-10'>Remove</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className='pb-16 flex justify-center gap-3'>
+          <div className='p-1'>
+            <h1 className='fs-2'>Total Price: ₹{totalPrice}/-</h1>
+          </div>
+          <div className='p-1 '>
+            <button className='bg-green-700 rounded-lg font-semibold uppercase p-3 text-white'>CheckOut</button>
+          </div>
         </div>
       </div>
     </div>
