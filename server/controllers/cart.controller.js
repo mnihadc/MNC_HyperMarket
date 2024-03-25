@@ -45,3 +45,19 @@ export const getCartProduct = async (req, res, next) => {
 
     }
 };
+
+export const updateCartQuantity = async (req, res, next) => {
+    try {
+        const { itemId } = req.params;
+        const { quantity } = req.body;
+        const updatedCartItem = await Cart.findOneAndUpdate(
+            { _id: itemId },
+            { quantity: quantity },
+            { new: true }
+        );
+
+        res.status(200).json(updatedCartItem);
+    } catch (error) {
+        next(error);
+    }
+}
