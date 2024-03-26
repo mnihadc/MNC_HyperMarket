@@ -43,11 +43,12 @@ function Cart() {
 
     fetchCart();
   }, [currentUser]);
-
   const increaseQuantity = (itemId) => {
     const updatedCartItems = filteredCartItems.map(item => {
       if (item._id === itemId) {
-        return { ...item, cartQuantity: item.cartQuantity + 1 };
+        const newQuantity = item.cartQuantity + 1;
+        updateCartItemQuantity(currentUser._id, itemId, newQuantity);
+        return { ...item, cartQuantity: newQuantity };
       }
       return item;
     });
@@ -57,11 +58,32 @@ function Cart() {
   const decreaseQuantity = (itemId) => {
     const updatedCartItems = filteredCartItems.map(item => {
       if (item._id === itemId && item.cartQuantity > 1) {
-        return { ...item, cartQuantity: item.cartQuantity - 1 };
+        const newQuantity = item.cartQuantity - 1;
+        updateCartItemQuantity(currentUser._id, itemId, newQuantity);
+        return { ...item, cartQuantity: newQuantity };
       }
       return item;
     });
     setFilteredCartItems(updatedCartItems);
+  };
+
+  const updateCartItemQuantity = async (userId, itemId, newQuantity) => {
+    try {
+      const response = await fetch(`/api/cart/updateCartQuantity/${userId}/${itemId}`, {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ quantity: newQuantity }),
+      });
+      if (response.ok) {
+        // Quantity updated successfully
+      } else {
+        console.error('Failed to update quantity');
+      }
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+    }
   };
 
   if (loading) {
