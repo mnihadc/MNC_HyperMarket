@@ -1,18 +1,17 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../firebase";
 import { useNavigate } from 'react-router-dom';
 
 function CreateListings() {
     const [files, setFiles] = useState([]);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         imageUrls: [],
         offerPrice: '',
         mrp: '',
         description: '',
-        quantity: '',
+        quantity: [],
         productName: '',
         productCategory: '',
     });
@@ -31,19 +30,21 @@ function CreateListings() {
             }
             Promise.all(promises).then((urls) => {
                 setFormData({
-                    ...formData, imageUrls: formData.imageUrls.concat(urls),
-                })
+                    ...formData,
+                    imageUrls: formData.imageUrls.concat(urls),
+                });
                 setImageUploadError(false);
                 setUploading(false);
             }).catch((err) => {
                 setImageUploadError('Image upload failed (2 mb max per image');
                 setUploading(false);
-            })
+            });
         } else {
             setImageUploadError('You can only upload 6 images per listing');
-            setUploading(false)
+            setUploading(false);
         }
     };
+
     const storeImage = async (file) => {
         return new Promise((resolve, reject) => {
             const storage = getStorage(app);
@@ -64,9 +65,10 @@ function CreateListings() {
                         resolve(downloadURL);
                     });
                 }
-            )
-        })
-    }
+            );
+        });
+    };
+
     const handleRemoveImage = (index) => {
         setFormData({
             ...formData,
@@ -74,12 +76,31 @@ function CreateListings() {
         });
     };
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.id]: e.target.value
-        })
-    }
+    const handleChange = (e, index) => {
+        const { id, value } = e.target;
+        if (id.startsWith('quantity')) {
+            const updatedQuantity = [...formData.quantity];
+            updatedQuantity[index] = value;
+            setFormData({
+                ...formData,
+                quantity: updatedQuantity,
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [id]: value,
+            });
+        }
+    };
+
+    const handleAddQuantityField = () => {
+        if (formData.quantity.length < 10) {
+            setFormData({
+                ...formData,
+                quantity: [...formData.quantity, ''],
+            });
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -94,7 +115,7 @@ function CreateListings() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    ...formData
+                    ...formData,
                 }),
             });
             const data = await res.json();
@@ -104,13 +125,13 @@ function CreateListings() {
                 setLoading(false);
                 return;
             }
-            navigate('/')
+            navigate('/');
             setLoading(false);
         } catch (error) {
-            setError(error.message)
+            setError(error.message);
             setLoading(false);
         }
-    }
+    };
 
     return (
         <div className='p-8 pt-24'>
@@ -163,17 +184,6 @@ function CreateListings() {
                 <div className='mb-4'>
                     <input
                         type='text'
-                        id='quantity'
-                        name='quantity'
-                        placeholder='Quantity'
-                        className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                        required
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className='mb-4'>
-                    <input
-                        type='text'
                         id='description'
                         name='description'
                         placeholder='Short description'
@@ -182,27 +192,46 @@ function CreateListings() {
                         onChange={handleChange}
                     />
                 </div>
-
                 <div className="flex flex-col flex-1 gap-4">
-                    <p className='font-semibold'>Images:
-                        <span className='font-normal text-gray-600 ml-2'>The first image will be the cover (max 6)</span>
-                    </p>
-                    <div className="flex gap-4">
-                        <input onChange={(e) => setFiles(e.target.files)} className='p-3 border border-gray-300 rounded w-full' type="file" id='images' multiple />
-                        <button type='button' disabled={uploading} onClick={handleImageSubmit} className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'>{uploading ? 'Uploading...' : 'Upload'}</button>
-                    </div>
-                    <p className='text-red-700 text-sm'>{imageUploadError && imageUploadError}</p>
-                    {
-                        formData.imageUrls.length > 0 && formData.imageUrls.map((url, index) => (
-                            <div key={url} className='flex justify-between p-3 border items-center'>
-                                <img src={url} alt="Listing Image" className='w-20 h-20 object-contain rounded-lg' />
-                                <button onClick={() => handleRemoveImage(index)} className='p-3 text-red-700 rounded-lg uppercase hover:opacity-95'>Delete</button>
-                            </div>
-                        ))
-                    }
-                    <button disabled={loading || uploading} className='p-3 pb-3 mb-14 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>{loading ? 'Creating...' : 'Create Listing'}</button>
-                    {error && <p className='text-red-700 text-sm'>{error}</p>}
+                    <p className='font-semibold'>Quantity:</p>
+                    {formData.quantity.map((quantityItem, index) => (
+                        <input
+                            key={index}
+                            type='text'
+                            id={`quantity-${index}`}
+                            name={`quantity-${index}`}
+                            placeholder='Enter quantity'
+                            value={quantityItem}
+                            className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                            required
+                            onChange={(e) => handleChange(e, index)}
+                        />
+                    ))}
+                    {formData.quantity.length < 10 && (
+                        <button
+                            type='button'
+                            onClick={handleAddQuantityField}
+                            className='p-3 pb-3 bg-gray-200 text-gray-700 rounded-lg uppercase hover:opacity-95'
+                        >
+                            Add Quantity
+                        </button>
+                    )}
                 </div>
+                <div className="flex gap-4">
+                    <input onChange={(e) => setFiles(e.target.files)} className='p-3 border border-gray-300 rounded w-full' type="file" id='images' multiple />
+                    <button type='button' disabled={uploading} onClick={handleImageSubmit} className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'>{uploading ? 'Uploading...' : 'Upload'}</button>
+                </div>
+                <p className='text-red-700 text-sm'>{imageUploadError && imageUploadError}</p>
+                {
+                    formData.imageUrls.length > 0 && formData.imageUrls.map((url, index) => (
+                        <div key={url} className='flex justify-between p-3 border items-center'>
+                            <img src={url} alt="Listing Image" className='w-20 h-20 object-contain rounded-lg' />
+                            <button onClick={() => handleRemoveImage(index)} className='p-3 text-red-700 rounded-lg uppercase hover:opacity-95'>Delete</button>
+                        </div>
+                    ))
+                }
+                <button disabled={loading || uploading} className='p-3 pb-3 mb-14 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>{loading ? 'Creating...' : 'Create Listing'}</button>
+                {error && <p className='text-red-700 text-sm'>{error}</p>}
             </form>
         </div>
     );

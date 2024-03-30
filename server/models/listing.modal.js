@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 const listingSchema = new mongoose.Schema({
     offerPrice: {
         type: Number,
@@ -7,12 +9,10 @@ const listingSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    quantity: [{
-        size: {
-            type: String,
-            required: true
-        }
-    }],
+    quantity: {
+        type: Array,
+        required: true,
+    },
     productName: {
         type: String,
         required: true,
@@ -30,3 +30,7 @@ const listingSchema = new mongoose.Schema({
         required: true,
     },
 }, { timestamps: true });
+
+const Listing = mongoose.model('Listing', listingSchema);
+
+export default Listing;
