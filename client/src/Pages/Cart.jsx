@@ -43,6 +43,8 @@ function Cart() {
 
     fetchCart();
   }, [currentUser]);
+
+
   const increaseQuantity = (itemId) => {
     const updatedCartItems = filteredCartItems.map(item => {
       if (item._id === itemId) {
@@ -105,7 +107,17 @@ function Cart() {
                     <div className='p-2'>
                       <h3 className='card-title font-semibold'>{item.productName}</h3>
                       <p className='card-text'>Description: {item.description}</p>
-                      <p className='card-text'>Size: {item.quantity}</p>
+                      <select
+                        value={item.selectedSize}
+                        className="form-select w-24 h-8"
+                      >
+                        {item.quantity.map((size) => {
+                          return <option key={size} value={size}>{size}</option>;
+
+                        })}
+
+                      </select>
+
                     </div>
                   </div>
                   <div className='card-body flex gap-3'>
