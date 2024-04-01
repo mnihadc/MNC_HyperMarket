@@ -2,11 +2,11 @@ import mongoose from 'mongoose';
 
 const listingSchema = new mongoose.Schema({
     offerPrice: {
-        type: Number,
+        type: [Number],
         required: true,
     },
     mrp: {
-        type: Number,
+        type: [Number],
         required: true,
     },
     quantity: {

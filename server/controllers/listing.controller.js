@@ -2,10 +2,15 @@ import Listing from "../models/listing.modal.js";
 
 export const createListings = async (req, res, next) => {
     try {
-        const { offerPrice, mrp, productName, productCategory, description, imageUrls, quantity } = req.body;
+        const { productName, productCategory, description, imageUrls, quantity, offers } = req.body;
+        
+        const offerPrice = offers.map(offer => offer.offerPrice);
+        const mrp = offers.map(offer => offer.mrp);
+        
         if (!Array.isArray(quantity) || quantity.some(item => typeof item !== 'string')) {
             return res.status(400).json({ error: 'Invalid quantity format. Please provide an array of strings.' });
         }
+
         const listing = await Listing.create({ offerPrice, mrp, productName, productCategory, description, imageUrls, quantity });
         return res.status(201).json(listing);
     } catch (error) {

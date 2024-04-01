@@ -8,8 +8,7 @@ function CreateListings() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         imageUrls: [],
-        offerPrice: '',
-        mrp: '',
+        offers: [{ offerPrice: '', mrp: '' }],
         description: '',
         quantity: [],
         productName: '',
@@ -54,8 +53,7 @@ function CreateListings() {
             uploadTask.on(
                 'state_changed',
                 (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log(`Upload is ${progress}% done`);
+                    // Progress monitoring
                 },
                 (error) => {
                     reject(error);
@@ -76,14 +74,26 @@ function CreateListings() {
         });
     };
 
-    const handleChange = (e, index) => {
+    const handleChange = (e, index, type) => {
         const { id, value } = e.target;
         if (id.startsWith('quantity')) {
             const updatedQuantity = [...formData.quantity];
             updatedQuantity[index] = value;
+            const updatedOffers = [...formData.offers];
+            
+            updatedOffers[index].offerPrice = value;
+            updatedOffers[index].mrp = value;
             setFormData({
                 ...formData,
                 quantity: updatedQuantity,
+                offers: updatedOffers,
+            });
+        } else if (type === 'offerPrice' || type === 'mrp') {
+            const updatedOffers = [...formData.offers];
+            updatedOffers[index][type] = value;
+            setFormData({
+                ...formData,
+                offers: updatedOffers,
             });
         } else {
             setFormData({
@@ -91,6 +101,14 @@ function CreateListings() {
                 [id]: value,
             });
         }
+    };
+
+
+    const handleAddOfferField = () => {
+        setFormData({
+            ...formData,
+            offers: [...formData.offers, { offerPrice: '', mrp: '' }],
+        });
     };
 
     const handleAddQuantityField = () => {
@@ -106,8 +124,12 @@ function CreateListings() {
         e.preventDefault();
         try {
             if (formData.imageUrls.length < 1) return setError('You must upload at least one image');
-            setLoading(true);
+            if (formData.quantity.length === 0) return setError('You must add at least one quantity');
+            if (!formData.productName.trim() || !formData.productCategory.trim() || !formData.description.trim()) {
+                return setError('Product name, category, and description are required');
+            }
 
+            setLoading(true);
             setError(false);
             const res = await fetch('/api/listing/create-listings', {
                 method: 'POST',
@@ -119,7 +141,6 @@ function CreateListings() {
                 }),
             });
             const data = await res.json();
-
             if (data.success === false) {
                 setError(data.message);
                 setLoading(false);
@@ -128,6 +149,7 @@ function CreateListings() {
             navigate('/');
             setLoading(false);
         } catch (error) {
+            console.error('Submit Error:', error);
             setError(error.message);
             setLoading(false);
         }
@@ -159,28 +181,7 @@ function CreateListings() {
                         onChange={handleChange}
                     />
                 </div>
-                <div className='mb-4'>
-                    <input
-                        type='number'
-                        id='mrp'
-                        name='mrp'
-                        placeholder='MRP'
-                        className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                        required
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className='mb-4'>
-                    <input
-                        type='number'
-                        id='offerPrice'
-                        name='offerPrice'
-                        placeholder='Offer Price'
-                        className='shadow appearance-none border-2 border-gray-300  rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                        required
-                        onChange={handleChange}
-                    />
-                </div>
+
                 <div className='mb-4'>
                     <input
                         type='text'
@@ -192,7 +193,7 @@ function CreateListings() {
                         onChange={handleChange}
                     />
                 </div>
-                <div className="flex flex-col flex-1 gap-4">
+                <div className="flex flex-col flex-1 gap-4 pb-2">
                     <p className='font-semibold'>Quantity:</p>
                     {formData.quantity.map((quantityItem, index) => (
                         <input
@@ -204,7 +205,7 @@ function CreateListings() {
                             value={quantityItem}
                             className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
                             required
-                            onChange={(e) => handleChange(e, index)}
+                            onChange={(e) => handleChange(e, index, 'quantity')}
                         />
                     ))}
                     {formData.quantity.length < 10 && (
@@ -217,6 +218,31 @@ function CreateListings() {
                         </button>
                     )}
                 </div>
+                {formData.offers.map((offer, index) => (
+                    <div key={index} className='mb-4'>
+                        <input
+                            type='number'
+                            id={`offerPrice-${index}`}
+                            name={`offerPrice-${index}`}
+                            placeholder='Offer Price'
+                            className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                            required
+                            value={offer.offerPrice}
+                            onChange={(e) => handleChange(e, index, 'offerPrice')}
+                        />
+                        <input
+                            type='number'
+                            id={`mrp-${index}`}
+                            name={`mrp-${index}`}
+                            placeholder='MRP'
+                            className='shadow appearance-none border-2 border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                            required
+                            value={offer.mrp}
+                            onChange={(e) => handleChange(e, index, 'mrp')}
+                        />
+                    </div>
+                ))}
+                <button type='button' onClick={handleAddOfferField} className='p-3 bg-gray-200 text-gray-700 rounded-lg uppercase hover:opacity-95'>Add Offer Price and MRP</button>
                 <div className="flex gap-4">
                     <input onChange={(e) => setFiles(e.target.files)} className='p-3 border border-gray-300 rounded w-full' type="file" id='images' multiple />
                     <button type='button' disabled={uploading} onClick={handleImageSubmit} className='p-3 text-green-700 border border-green-700 rounded uppercase hover:shadow-lg disabled:opacity-80'>{uploading ? 'Uploading...' : 'Upload'}</button>
