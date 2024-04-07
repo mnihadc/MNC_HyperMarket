@@ -55,6 +55,7 @@ function Cart() {
     });
     setFilteredCartItems(updatedCartItems);
   };
+  
 
   const decreaseQuantity = (itemId) => {
     const updatedCartItems = filteredCartItems.map(item => {
@@ -96,8 +97,6 @@ function Cart() {
         const selectedSize = item.quantity[quantityIndex];
         const offerPrice = item.offers[quantityIndex]?.offerPrice;
         const mrp = item.offers[quantityIndex]?.mrp;
-
-        // Update the offerPrice and mrp arrays based on the selected quantity index
         const updatedItem = { ...item, selectedSize, offerPrice: [offerPrice], mrp: [mrp] };
         return updatedItem;
       }
@@ -119,7 +118,7 @@ function Cart() {
       if (response.ok) {
         const updatedCartItems = filteredCartItems.map(item => {
           if (item._id === itemId) {
-            return { ...item, selectedSize: newSize };
+            return { ...item, size: newSize }; // Update the size property
           }
           return item;
         });
@@ -131,6 +130,7 @@ function Cart() {
       console.error('Error updating size:', error);
     }
   };
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -151,13 +151,14 @@ function Cart() {
                     <div className='p-2'>
                       <h3 className='card-title font-semibold'>{item.productName}</h3>
                       <p className='card-text'>Description: {item.description}</p>
+
                       <select
-                        value={item.selectedSize}
+                        value={item.size} 
                         className="form-select w-24 h-9"
-                        onChange={(e) => handleChangeQuantity(e, index)}
+                        onChange={(e) => handleChangeSize(item._id, e.target.value)}
                       >
                         {item.quantity && item.quantity.map((size, i) => (
-                          <option key={size} value={i}>
+                          <option key={size} value={size}>
                             {size}
                           </option>
                         ))}

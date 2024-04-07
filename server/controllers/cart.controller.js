@@ -59,14 +59,14 @@ export const updateCartQuantity = async (req, res, next) => {
         next(error);
     }
 }
-export const updateCartListingSize = async (req, res, next) => {
+export const updateCartProductSize = async (req, res, next) => {
     const { userId, itemId } = req.params;
     const { size } = req.body;
 
     try {
         const updatedCartItem = await Cart.findOneAndUpdate(
-            { userId, _id: itemId },
-            { size },
+            { productId: itemId },
+            { size: size },
             { new: true }
         );
 
@@ -80,4 +80,5 @@ export const updateCartListingSize = async (req, res, next) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
