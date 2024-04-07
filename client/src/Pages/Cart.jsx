@@ -89,25 +89,48 @@ function Cart() {
 
   const handleChangeQuantity = (e, index) => {
     const { value } = e.target;
-    const quantityIndex = parseInt(value, 10); // Parse the value to integer
-  
+    const quantityIndex = parseInt(value, 10);
+
     const updatedCartItems = filteredCartItems.map((item, i) => {
       if (i === index && item.quantity && item.quantity[quantityIndex] && item.offers) {
         const selectedSize = item.quantity[quantityIndex];
         const offerPrice = item.offers[quantityIndex]?.offerPrice;
         const mrp = item.offers[quantityIndex]?.mrp;
-  
+
         // Update the offerPrice and mrp arrays based on the selected quantity index
         const updatedItem = { ...item, selectedSize, offerPrice: [offerPrice], mrp: [mrp] };
         return updatedItem;
       }
       return item;
     });
-  
+
     setFilteredCartItems(updatedCartItems);
   };
-  
 
+  const handleChangeSize = async (itemId, newSize) => {
+    try {
+      const response = await fetch(`/api/cart/updateCartProductSize/${currentUser._id}/${itemId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ size: newSize }),
+      });
+      if (response.ok) {
+        const updatedCartItems = filteredCartItems.map(item => {
+          if (item._id === itemId) {
+            return { ...item, selectedSize: newSize };
+          }
+          return item;
+        });
+        setFilteredCartItems(updatedCartItems);
+      } else {
+        console.error('Failed to update size');
+      }
+    } catch (error) {
+      console.error('Error updating size:', error);
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const SupermarketListing = () => {
     const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(false);
-    
+
     const navigate = useNavigate();
     const [error, setError] = useState(false);
     const [cart, setCart] = useState([]);
@@ -36,9 +36,9 @@ const SupermarketListing = () => {
         fetchListing();
     }, []);
 
-    const handleAdToCart = async (productId) => {
+    const handleAdToCart = async (productId, quantity) => {
         try {
-            if(!currentUser){
+            if (!currentUser) {
                 navigate('/sign-in');
             }
             const res = await fetch(`/api/cart/addtocart/${currentUser._id}/${productId}`, {
@@ -48,6 +48,8 @@ const SupermarketListing = () => {
                 },
                 body: JSON.stringify({
                     quantity: 1,
+                    size: quantity,
+
                 }),
             })
             const data = await res.json();
@@ -75,12 +77,15 @@ const SupermarketListing = () => {
                                 <p className="card-title font-semibold text-1xl" style={{ overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitBoxOrient: "vertical", maxHeight: "4em" }}>
                                     {product.productName}
                                 </p>
+                                <p className="card-title" >
+                                    {product.quantity[0]}
+                                </p>
                             </div>
-                            
+
                             <hr />
                             <button
                                 className={`btn btn-success justify-center p-1`}
-                                onClick={() => handleAdToCart(product._id)}
+                                onClick={() => handleAdToCart(product._id, product.quantity[0])}
                                 style={{ height: "40px", backgroundColor: productsInCart.includes(product._id) ? 'blue' : 'green' }}>
                                 {productsInCart.includes(product._id) ? 'In Cart' : 'Add to Cart'}
                             </button>
