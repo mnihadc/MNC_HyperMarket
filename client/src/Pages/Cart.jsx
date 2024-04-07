@@ -28,7 +28,7 @@ function Cart() {
             }
           }).filter(Boolean);
           setFilteredCartItems(filteredItems);
-          const total = filteredItems.reduce((acc, item) => acc + item.offerPrice, 0);
+          const total = filteredItems.reduce((acc, item) => acc + item.offerPrice[0], 0); // Use only the first offer price for total calculation
           setTotalPrice(total);
         } else {
           setFilteredCartItems([]);
@@ -43,7 +43,6 @@ function Cart() {
 
     fetchCart();
   }, [currentUser]);
-
 
   const increaseQuantity = (itemId) => {
     const updatedCartItems = filteredCartItems.map(item => {
@@ -88,6 +87,28 @@ function Cart() {
     }
   };
 
+  const handleChangeQuantity = (e, index) => {
+    const { value } = e.target;
+    const quantityIndex = parseInt(value, 10); // Parse the value to integer
+  
+    const updatedCartItems = filteredCartItems.map((item, i) => {
+      if (i === index && item.quantity && item.quantity[quantityIndex] && item.offers) {
+        const selectedSize = item.quantity[quantityIndex];
+        const offerPrice = item.offers[quantityIndex]?.offerPrice;
+        const mrp = item.offers[quantityIndex]?.mrp;
+  
+        // Update the offerPrice and mrp arrays based on the selected quantity index
+        const updatedItem = { ...item, selectedSize, offerPrice: [offerPrice], mrp: [mrp] };
+        return updatedItem;
+      }
+      return item;
+    });
+  
+    setFilteredCartItems(updatedCartItems);
+  };
+  
+
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -99,7 +120,7 @@ function Cart() {
           <div className='text-2xl p-5 font-semibold text-blue'>No items in cart</div>
         ) : (
           <div className='row row-cols-1 row-cols-md-3'>
-            {filteredCartItems.map((item) => (
+            {filteredCartItems.map((item, index) => (
               <div key={item._id} className={`col p-1 ${isMobile ? 'mb-3' : ''}`}>
                 <div className='card p-2 bg-slate-100'>
                   <div className='flex'>
@@ -109,13 +130,14 @@ function Cart() {
                       <p className='card-text'>Description: {item.description}</p>
                       <select
                         value={item.selectedSize}
-                        className="form-select w-24 h-8"
+                        className="form-select w-24 h-9"
+                        onChange={(e) => handleChangeQuantity(e, index)}
                       >
-                        {item.quantity.map((size) => {
-                          return <option key={size} value={size}>{size}</option>;
-
-                        })}
-
+                        {item.quantity && item.quantity.map((size, i) => (
+                          <option key={size} value={i}>
+                            {size}
+                          </option>
+                        ))}
                       </select>
 
                     </div>
@@ -132,8 +154,9 @@ function Cart() {
                         </p>
                       </div>
                       <div className='flex gap-2'>
-                        <p className='card-text text-decoration-line-through'>MRP: ₹{item.mrp}</p>
-                        <p className='card-text font-semibold'>MRP: ₹{item.offerPrice}</p>
+
+                        <p className='card-text text-decoration-line-through'>MRP: ₹{item.mrp[0]}</p>
+                        <p className='card-text font-semibold'>offerPrice: ₹{item.offerPrice[0]}</p>
                       </div>
                     </div>
                     <div>
