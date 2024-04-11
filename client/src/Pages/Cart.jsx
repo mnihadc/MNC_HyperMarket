@@ -28,9 +28,9 @@ function Cart() {
               return null;
             }
           }).filter(Boolean);
-          setFilteredCartItems(filteredItems);
-          const total = filteredItems.reduce((acc, item) => acc + item.offerPrice[0], 0); // Use only the first offer price for total calculation
+          const total = filteredItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);
           setTotalPrice(total);
+          setFilteredCartItems(filteredItems);
         } else {
           setFilteredCartItems([]);
           setTotalPrice(0);
@@ -55,6 +55,7 @@ function Cart() {
       return item;
     });
     setFilteredCartItems(updatedCartItems);
+    updateTotalPrice(updatedCartItems);
   };
 
   const decreaseQuantity = (itemId) => {
@@ -67,6 +68,7 @@ function Cart() {
       return item;
     });
     setFilteredCartItems(updatedCartItems);
+    updateTotalPrice(updatedCartItems);
   };
 
   const updateCartItemQuantity = async (userId, itemId, newQuantity) => {
@@ -103,12 +105,14 @@ function Cart() {
             const selectedIndex = item.quantity.indexOf(newSize);
             const newMrp = item.mrp[selectedIndex];
             const newOfferPrice = item.offerPrice[selectedIndex];
+            updateCartPrice(itemId, newOfferPrice, newMrp); // Update price here
             return { ...item, size: newSize, selectedSize: selectedIndex, mrP: newMrp, offerprice: newOfferPrice };
-
           }
           return item;
         });
         setFilteredCartItems(updatedCartItems);
+        const total = updatedCartItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);
+        setTotalPrice(total);
       } else {
         console.error('Failed to update size');
       }
@@ -117,7 +121,30 @@ function Cart() {
     }
   };
 
-  console.log(filteredCartItems);
+
+  const updateTotalPrice = (updatedCartItems) => {
+    const total = updatedCartItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);
+    setTotalPrice(total);
+  };
+  const updateCartPrice = async (itemId, newOfferPrice, newMrP) => {
+    try {
+      const response = await fetch(`/api/cart/updateCartPrice/${currentUser._id}/${itemId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ offerprice: newOfferPrice, mrP: newMrP }),
+      });
+      if (response.ok) {
+        // Price updated successfully
+      } else {
+        console.error('Failed to update price');
+      }
+    } catch (error) {
+      console.error('Error updating price:', error);
+    }
+  };
+
 
   if (loading) {
     return <div>Loading...</div>;
