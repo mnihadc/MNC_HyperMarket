@@ -101,7 +101,10 @@ function Cart() {
         const updatedCartItems = filteredCartItems.map(item => {
           if (item._id === itemId) {
             const selectedIndex = item.quantity.indexOf(newSize);
-            return { ...item, size: newSize, selectedSize: selectedIndex };
+            const newMrp = item.mrp[selectedIndex];
+            const newOfferPrice = item.offerPrice[selectedIndex];
+            return { ...item, size: newSize, selectedSize: selectedIndex, mrP: newMrp, offerprice: newOfferPrice };
+
           }
           return item;
         });
