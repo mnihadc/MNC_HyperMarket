@@ -80,4 +80,26 @@ export const updateCartProductSize = async (req, res, next) => {
     }
 };
 
+export const updateCartOfferPriceMrp = async (req, res, next) => {
+    const { userId, itemId } = req.params;
+    const { offerprice, mrP } = req.body;
+
+    try {
+        const updatedCartItem = await Cart.findOneAndUpdate(
+            { productId: itemId },
+            { offerprice: offerprice },
+            { mrP: mrP },
+            { new: true }
+        );
+
+        if (updatedCartItem) {
+            res.status(200).json({ message: 'Cart item size updated successfully', updatedCartItem });
+        } else {
+            res.status(404).json({ message: 'Cart item not found' });
+        }
+    } catch (error) {
+        console.error('Error updating cart item size:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
 
