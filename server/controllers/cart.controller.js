@@ -106,3 +106,18 @@ export const updateCartPrice = async (req, res, next) => {
 }
 
 
+export const removeCartProduct = async (req, res, next) => {
+    try {
+        const { userId, itemId } = req.params;
+        const removedCartItem = await Cart.findOneAndDelete({ productId: itemId });
+
+        if (removedCartItem) {
+            res.status(200).json({ message: 'Cart item removed successfully' });
+        } else {
+            res.status(404).json({ message: 'Cart item not found' });
+        }
+    } catch (error) {
+        console.error('Error removing cart item:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
