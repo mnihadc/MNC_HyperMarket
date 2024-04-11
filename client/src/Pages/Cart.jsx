@@ -145,6 +145,23 @@ function Cart() {
     }
   };
 
+  const handleRemoveCartProduct = async (itemId) => {
+    try {
+      const response = await fetch(`/api/cart/removeCartProduct/${currentUser._id}/${itemId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+
+        const updatedCartItems = filteredCartItems.filter(item => item._id !== itemId);
+        setFilteredCartItems(updatedCartItems);
+        updateTotalPrice(updatedCartItems);
+      } else {
+        console.error('Failed to remove item from cart');
+      }
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -198,7 +215,7 @@ function Cart() {
 
                     </div>
                     <div>
-                      <button type='button' className='bg-slate-500 rounded-lg text-white w-20 h-10'>Remove</button>
+                      <button type='button' className='bg-slate-500 rounded-lg text-white w-20 h-10' onClick={() => handleRemoveCartProduct(item._id)}>Remove</button>
                     </div>
                   </div>
                 </div>
