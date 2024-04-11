@@ -4,9 +4,8 @@ import { handleError } from "../utils/error.js";
 export const addToCart = async (req, res, next) => {
     try {
         const { userId, productId } = req.params;
-        const { quantity, size } = req.body;
-
-        if (!productId || !quantity || !size || isNaN(quantity) || quantity <= 0 || !userId) {
+        const { quantity, size, offerprice, mrP } = req.body;
+        if (!productId || !quantity || !size || !offerprice || !mrP || isNaN(quantity) || quantity <= 0 || !userId) {
             return next(handleError(400, "Invalid request data."));
         }
 
@@ -16,7 +15,7 @@ export const addToCart = async (req, res, next) => {
             return next(handleError(400, "Product is already in the cart."));
         }
 
-        const newCartItem = await Cart.create({ productId, quantity, userId, size });
+        const newCartItem = await Cart.create({ productId, quantity, userId, size, offerprice, mrP });
 
         res.status(201).json(newCartItem);
     } catch (error) {

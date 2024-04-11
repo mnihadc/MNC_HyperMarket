@@ -14,9 +14,17 @@ const cartSchema = new mongoose.Schema({
         required: true,
     },
     size: {
-        type: String, 
+        type: String,
         required: true,
     },
+    offerprice: {
+        type: Number,
+        required: true,
+    },
+    mrP: {
+        type: Number,
+        required: true,
+    }
 }, { timestamps: true });
 
 const Cart = mongoose.model('Cart', cartSchema);

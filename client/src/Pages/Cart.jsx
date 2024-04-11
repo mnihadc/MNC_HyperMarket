@@ -7,6 +7,7 @@ function Cart() {
   const [filteredCartItems, setFilteredCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [useClientData, setUseClientData] = useState(true); // State to toggle between client-side and database data
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
   useEffect(() => {
@@ -55,7 +56,6 @@ function Cart() {
     });
     setFilteredCartItems(updatedCartItems);
   };
-  
 
   const decreaseQuantity = (itemId) => {
     const updatedCartItems = filteredCartItems.map(item => {
@@ -88,24 +88,6 @@ function Cart() {
     }
   };
 
-  const handleChangeQuantity = (e, index) => {
-    const { value } = e.target;
-    const quantityIndex = parseInt(value, 10);
-
-    const updatedCartItems = filteredCartItems.map((item, i) => {
-      if (i === index && item.quantity && item.quantity[quantityIndex] && item.offers) {
-        const selectedSize = item.quantity[quantityIndex];
-        const offerPrice = item.offers[quantityIndex]?.offerPrice;
-        const mrp = item.offers[quantityIndex]?.mrp;
-        const updatedItem = { ...item, selectedSize, offerPrice: [offerPrice], mrp: [mrp] };
-        return updatedItem;
-      }
-      return item;
-    });
-
-    setFilteredCartItems(updatedCartItems);
-  };
-
   const handleChangeSize = async (itemId, newSize) => {
     try {
       const response = await fetch(`/api/cart/updateCartProductSize/${currentUser._id}/${itemId}`, {
@@ -118,7 +100,8 @@ function Cart() {
       if (response.ok) {
         const updatedCartItems = filteredCartItems.map(item => {
           if (item._id === itemId) {
-            return { ...item, size: newSize }; // Update the size property
+            const selectedIndex = item.quantity.indexOf(newSize);
+            return { ...item, size: newSize, selectedSize: selectedIndex };
           }
           return item;
         });
@@ -131,6 +114,7 @@ function Cart() {
     }
   };
 
+  console.log(filteredCartItems);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -153,7 +137,7 @@ function Cart() {
                       <p className='card-text'>Description: {item.description}</p>
 
                       <select
-                        value={item.size} 
+                        value={item.size}
                         className="form-select w-24 h-9"
                         onChange={(e) => handleChangeSize(item._id, e.target.value)}
                       >
@@ -178,10 +162,10 @@ function Cart() {
                         </p>
                       </div>
                       <div className='flex gap-2'>
-
-                        <p className='card-text text-decoration-line-through'>MRP: ₹{item.mrp[0]}</p>
-                        <p className='card-text font-semibold'>offerPrice: ₹{item.offerPrice[0]}</p>
+                        <p className='card-text text-decoration-line-through'>MRP: ₹{item.mrP}</p>
+                        <p className='card-text font-semibold'>offerPrice: ₹{item.offerprice}</p>
                       </div>
+
                     </div>
                     <div>
                       <button type='button' className='bg-slate-500 rounded-lg text-white w-20 h-10'>Remove</button>

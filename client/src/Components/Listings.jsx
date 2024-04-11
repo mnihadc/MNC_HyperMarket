@@ -36,7 +36,8 @@ const SupermarketListing = () => {
         fetchListing();
     }, []);
 
-    const handleAdToCart = async (productId, quantity) => {
+    const handleAdToCart = async (productId, quantity, offerprice, mrP) => {
+
         try {
             if (!currentUser) {
                 navigate('/sign-in');
@@ -49,10 +50,12 @@ const SupermarketListing = () => {
                 body: JSON.stringify({
                     quantity: 1,
                     size: quantity,
-
+                    offerprice: offerprice,
+                    mrP: mrP,
                 }),
             })
             const data = await res.json();
+
             setCart(prevCart => [...prevCart, data]);
         } catch (error) {
             console.error("Error adding to cart:", error)
@@ -71,6 +74,7 @@ const SupermarketListing = () => {
             const row = (
                 <div className="flex justify-between mt-2" key={`row-${i / 3}`}>
                     {rowListings.map((product) => (
+
                         <div key={product._id} className="card bg-slate-200" style={{ width: "30%", height: "220px" }}>
                             <img src={product.imageUrls} className="card-img-top" alt={product.productName} style={{ height: "105px", objectFit: "contain" }} />
                             <div className="p-1" style={{ height: "70px", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -79,16 +83,20 @@ const SupermarketListing = () => {
                                 </p>
                                 <p className="card-title" >
                                     {product.quantity[0]}
+                                    {product.mrp[0]}
+                                    {product.offerPrice[0]}
                                 </p>
+
                             </div>
 
                             <hr />
                             <button
                                 className={`btn btn-success justify-center p-1`}
-                                onClick={() => handleAdToCart(product._id, product.quantity[0])}
+                                onClick={() => handleAdToCart(product._id, product.quantity[0], product.offerPrice[0], product.mrp[0])}
                                 style={{ height: "40px", backgroundColor: productsInCart.includes(product._id) ? 'blue' : 'green' }}>
                                 {productsInCart.includes(product._id) ? 'In Cart' : 'Add to Cart'}
                             </button>
+
                         </div>
                     ))}
                 </div>
