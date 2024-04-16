@@ -121,3 +121,30 @@ export const removeCartProduct = async (req, res, next) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+export const confirmOrder = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+
+        // Check if the user ID is provided
+        if (!userId) {
+            return next(handleError(400, "User ID is required."));
+        }
+
+        // Retrieve Cart Items for the specified user
+        const cartItems = await Cart.find({ userId });
+
+        if (!cartItems || cartItems.length === 0) {
+            return next(handleError(404, "No items found in the cart."));
+        }
+
+        // Calculate Total Price
+        const totalPrice = cartItems.reduce((total, item) => total + item.offerprice * item.quantity, 0);
+
+        // Send response with cart items and total price
+        res.status(200).json({ cartItems, totalPrice });
+    } catch (error) {
+        console.error('Error during checkout:', error);
+        next(handleError(500, "Internal Server Error"));
+    }
+};
