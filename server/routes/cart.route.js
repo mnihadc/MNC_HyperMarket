@@ -4,11 +4,12 @@ import { addToCart, getCartProduct, getCartbyuserId, removeCartProduct, updateCa
 const router = express.Router();
 
 router.post('/addtocart/:userId/:productId', addToCart);
-router.get('/getCart', getCartbyuserId);
+router.get('/getCart/:userId', getCartbyuserId);
 router.get('/getCartProduct', getCartProduct);
 router.post('/updateCartQuantity/:userId/:itemId', updateCartQuantity);
 router.post('/updateCartProductSize/:userId/:itemId', updateCartProductSize);
 router.post('/updateCartPrice/:userId/:itemId', updateCartPrice);
 router.delete('/removeCartProduct/:userId/:itemId', removeCartProduct);
+
 
 export default router;

@@ -7,14 +7,15 @@ function Cart() {
   const [filteredCartItems, setFilteredCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [useClientData, setUseClientData] = useState(true); // State to toggle between client-side and database data
+
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
   useEffect(() => {
     const fetchCart = async () => {
       setLoading(true);
       try {
-        const cartRes = await fetch('/api/cart/getCart');
+
+        const cartRes = await fetch(`/api/cart/getCart/${currentUser._id}`);
         const productRes = await fetch('/api/cart/getCartProduct');
         const cartData = await cartRes.json();
         const productData = await productRes.json();
@@ -73,6 +74,7 @@ function Cart() {
 
   const updateCartItemQuantity = async (userId, itemId, newQuantity) => {
     try {
+
       const response = await fetch(`/api/cart/updateCartQuantity/${userId}/${itemId}`, {
         method: 'post',
         headers: {
@@ -105,7 +107,7 @@ function Cart() {
             const selectedIndex = item.quantity.indexOf(newSize);
             const newMrp = item.mrp[selectedIndex];
             const newOfferPrice = item.offerPrice[selectedIndex];
-            updateCartPrice(itemId, newOfferPrice, newMrp); // Update price here
+            updateCartPrice(itemId, newOfferPrice, newMrp);
             return { ...item, size: newSize, selectedSize: selectedIndex, mrP: newMrp, offerprice: newOfferPrice };
           }
           return item;
@@ -120,7 +122,6 @@ function Cart() {
       console.error('Error updating size:', error);
     }
   };
-
 
   const updateTotalPrice = (updatedCartItems) => {
     const total = updatedCartItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);

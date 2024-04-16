@@ -26,7 +26,8 @@ export const addToCart = async (req, res, next) => {
 
 export const getCartbyuserId = async (req, res, next) => {
     try {
-        const cart = await Cart.find();
+        const { userId } = req.params;
+        const cart = await Cart.find({ userId: userId });
         res.status(200).json(cart);
     } catch (error) {
         next(error);
@@ -48,27 +49,26 @@ export const updateCartQuantity = async (req, res, next) => {
         const { userId, itemId } = req.params;
         const { quantity } = req.body;
         const updatedCartItem = await Cart.findOneAndUpdate(
-            { productId: itemId },
-            { quantity: quantity },
-            { new: true }
+            { userId: userId, productId: itemId }, // Query
+            { quantity: quantity }, // Update
+            { new: true } // Options
         );
 
         res.status(200).json(updatedCartItem);
     } catch (error) {
         next(error);
     }
-}
+};
+
 export const updateCartProductSize = async (req, res, next) => {
     const { userId, itemId } = req.params;
-    const { size, offerprice, mrP } = req.body;
+    const { size } = req.body;
 
     try {
         const updatedCartItem = await Cart.findOneAndUpdate(
-            { productId: itemId },
-            { size: size },
-            { offerprice: offerprice },
-            { mrP: mrP },
-            { new: true }
+            { userId: userId, productId: itemId }, // Query
+            { size: size }, // Update
+            { new: true } // Options
         );
 
         if (updatedCartItem) {
@@ -82,16 +82,16 @@ export const updateCartProductSize = async (req, res, next) => {
     }
 };
 
+
 export const updateCartPrice = async (req, res, next) => {
     const { userId, itemId } = req.params;
     const { offerprice, mrP } = req.body;
 
     try {
         const updatedCartItem = await Cart.findOneAndUpdate(
-            { productId: itemId },
-            { offerprice: offerprice },
-            { mrP: mrP },
-            { new: true }
+            { userId: userId, productId: itemId }, // Query
+            { offerprice: offerprice, mrP: mrP }, // Update
+            { new: true } // Options
         );
 
         if (updatedCartItem) {
@@ -103,13 +103,13 @@ export const updateCartPrice = async (req, res, next) => {
         console.error('Error updating cart item price:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 
 
 export const removeCartProduct = async (req, res, next) => {
     try {
         const { userId, itemId } = req.params;
-        const removedCartItem = await Cart.findOneAndDelete({ productId: itemId });
+        const removedCartItem = await Cart.findOneAndDelete({ productId: itemId, userId: userId });
 
         if (removedCartItem) {
             res.status(200).json({ message: 'Cart item removed successfully' });
@@ -120,4 +120,4 @@ export const removeCartProduct = async (req, res, next) => {
         console.error('Error removing cart item:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-};
+}
