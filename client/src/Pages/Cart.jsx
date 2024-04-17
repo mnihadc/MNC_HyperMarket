@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
-
+import { Link } from 'react-router-dom';
 function Cart() {
   const { currentUser } = useSelector((state) => state.user);
   const [filteredCartItems, setFilteredCartItems] = useState([]);
@@ -32,6 +32,7 @@ function Cart() {
           const total = filteredItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);
           setTotalPrice(total);
           setFilteredCartItems(filteredItems);
+          console.log(filteredItems)
         } else {
           setFilteredCartItems([]);
           setTotalPrice(0);
@@ -163,7 +164,6 @@ function Cart() {
       console.error('Error removing item from cart:', error);
     }
   };
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -223,15 +223,20 @@ function Cart() {
               </div>
             ))}
           </div>
+
         )}
-        <div className='pb-16 flex justify-center gap-3'>
-          <div className='p-1'>
-            <h1 className='fs-2'>Total Price: ₹{totalPrice}/-</h1>
+        {filteredCartItems.length > 0 && (
+          <div className='pb-16 flex justify-center gap-3'>
+            <div className='p-1'>
+              <h1 className='fs-2'>Total Price: ₹{totalPrice}/-</h1>
+            </div>
+            <div className='p-1 '>
+              <Link to={'/place-order'} >
+                <button className='bg-green-700 rounded-lg font-semibold uppercase p-2 text-white'>Confirm Order</button>
+              </Link>
+            </div>
           </div>
-          <div className='p-1 '>
-            <button className='bg-green-700 rounded-lg font-semibold uppercase p-3 text-white'>CheckOut</button>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

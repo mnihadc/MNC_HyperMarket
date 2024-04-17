@@ -14,6 +14,7 @@ import CreateAddress from './Pages/CreateAddress';
 import Address from './Pages/Address';
 import CreateListings from './Pages/CreateListings';
 import Responsive from './Components/Responsive';
+import PlaceOrder from './Pages/placeOrder';
 
 function App() {
 
@@ -31,11 +32,12 @@ function App() {
         <Route path='/create-address' element={<CreateAddress />} />
         <Route path='/address' element={<Address />} />
         <Route path='/create-listings' element={<CreateListings />} />
+        <Route path='/place-order' element={<PlaceOrder />} />
         <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
         </Route>
       </Routes>
-      
+
       <UserHeader />
     </BrowserRouter>
   )
