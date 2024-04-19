@@ -32,7 +32,7 @@ function Cart() {
           const total = filteredItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);
           setTotalPrice(total);
           setFilteredCartItems(filteredItems);
-          console.log(filteredItems)
+          
         } else {
           setFilteredCartItems([]);
           setTotalPrice(0);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-
+import { Link } from 'react-router-dom';
 function PlaceOrder() {
     const { currentUser } = useSelector((state) => state.user);
     const [cartItems, setCartItems] = useState([]);
@@ -29,12 +29,9 @@ function PlaceOrder() {
 
 
                     const total = updatedCartItems.reduce((acc, item) => {
-                        console.log("Offer Price:", item.offerprice);
-                        console.log("Cart Quantity:", item.quantity);
                         return acc + (item.offerprice * item.quantity);
                     }, 0);
                     setTotalPrice(total);
-                    console.log("Total Price:", total);
                 } else {
                     setCartItems([]);
                     setTotalPrice(0);
@@ -48,11 +45,12 @@ function PlaceOrder() {
     }, [currentUser]);
 
     return (
-        <div className='pt-20'>
-            <div className="flex justify-between items-center mb-4">
-        
-            <button>&#8592;</button>
-                <h2 className='font-semibold text-center'>Order Summary</h2>
+        <div className='pt-16'>
+            <div className="flex items-center mb-4">
+                <Link to={'/cart'}>
+                    <button className='text-3xl ml-1'>&#8592;</button>
+                </Link>
+                <h2 className='font-semibold ml-1'>Order Summary</h2>
             </div>
             <div>
                 {cartItems.map(item => (
