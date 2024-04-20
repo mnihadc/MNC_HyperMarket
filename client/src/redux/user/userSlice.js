@@ -4,6 +4,7 @@ const initialState = {
     currentUser: null,
     error: null,
     loading: false,
+    selectedAddressId: null,
 };
 
 const userSlice = createSlice({
@@ -58,7 +59,10 @@ const userSlice = createSlice({
         signoutUserFailure: (state, action) => {
             state.error = action.payload;
             state.loading = false;
-        }
+        },
+        setSelectedAddressId: (state, action) => {
+            state.selectedAddressId = action.payload;
+        },
     }
 
 })
@@ -66,6 +70,7 @@ const userSlice = createSlice({
 export const { signInStart, signInSuccess, signInFailure,
     updateUserStart, updateUserSuccess, updateUserFailure,
     deleteUserStart, deleteUserSuccess, deleteUserFailure,
-    signoutUserStart, signoutUserSuccess, signoutUserFailure } = userSlice.actions;
+    signoutUserStart, signoutUserSuccess, signoutUserFailure,
+    setSelectedAddressId } = userSlice.actions;
 
 export default userSlice.reducer;

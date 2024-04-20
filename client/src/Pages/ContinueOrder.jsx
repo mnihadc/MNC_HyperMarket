@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { setSelectedAddressId } from '../redux/user/userSlice';
 
 function ContinueOrder() {
     const { currentUser } = useSelector((state) => state.user);
     const [address, setAddress] = useState(null);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const fetchAddresses = async () => {
@@ -12,8 +14,10 @@ function ContinueOrder() {
                 const addressRes = await fetch(`/api/user/get-addresses/${currentUser._id}`);
                 const { addresses } = await addressRes.json();
                 setAddress(addresses[0]);
-                console.log(addresses[0]);
-                console.log(addresses);
+                if (addresses.length > 0) {
+                    // If there are addresses, set the ID of the first address in Redux state
+                    dispatch(setSelectedAddressId(addresses[0]._id));
+                }
             } catch (error) {
                 console.error("Error loading user's addresses:", error);
             }
@@ -21,7 +25,9 @@ function ContinueOrder() {
 
         fetchAddresses();
     }, [currentUser]);
-
+    const handleSelectAddress = (addressId) => {
+        dispatch(setSelectedAddressId(addressId)); // Dispatch the action to store the selected address ID
+    };
     return (
         <div className='pt-16'>
             <div className='flex item-center'>
@@ -43,7 +49,7 @@ function ContinueOrder() {
                             <p>{address.email} </p>
                             <div className='flex justify-content-center'>
                                 <p className=''>contact: {address.contact}</p>
-                                <button className='bg-slate-500 rounded-md text-sm font-medium p-1 text-white ml-2'>Change</button>
+                                <button onClick={() => handleSelectAddress(address._id)} className='bg-slate-500 rounded-md text-sm font-medium p-1 text-white ml-2'>Change</button>
                             </div>
                         </div>
                     </div>
