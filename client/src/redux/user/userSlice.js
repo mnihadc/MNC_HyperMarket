@@ -64,13 +64,22 @@ const userSlice = createSlice({
             state.selectedAddressId = action.payload;
         },
     }
+});
 
-})
-
-export const { signInStart, signInSuccess, signInFailure,
-    updateUserStart, updateUserSuccess, updateUserFailure,
-    deleteUserStart, deleteUserSuccess, deleteUserFailure,
-    signoutUserStart, signoutUserSuccess, signoutUserFailure,
-    setSelectedAddressId } = userSlice.actions;
+export const { 
+    signInStart, 
+    signInSuccess, 
+    signInFailure,
+    updateUserStart, 
+    updateUserSuccess, 
+    updateUserFailure,
+    deleteUserStart, 
+    deleteUserSuccess, 
+    deleteUserFailure,
+    signoutUserStart, 
+    signoutUserSuccess, 
+    signoutUserFailure,
+    setSelectedAddressId 
+} = userSlice.actions;
 
 export default userSlice.reducer;
