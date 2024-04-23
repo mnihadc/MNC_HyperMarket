@@ -61,11 +61,13 @@ function ContinueOrder() {
                     </Link>
                 )}
             </div>
-            <div className='flex'>
-                <Link to='/confirm-order'>
-                    <button className='bg-green-700 rounded-lg font-semibold uppercase p-1 text-white ml-2'>Confirm Order</button>
-                </Link>
-            </div>
+            {address && (
+                <div className='flex'>
+                    <Link to='/payment'>
+                        <button className='bg-green-700 rounded-lg font-semibold uppercase p-1 text-white ml-2'>Place Order</button>
+                    </Link>
+                </div>
+            )}
         </div>
     );
 }

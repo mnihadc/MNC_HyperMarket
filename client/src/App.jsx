@@ -16,6 +16,7 @@ import CreateListings from './Pages/CreateListings';
 import Responsive from './Components/Responsive';
 import PlaceOrder from './Pages/PlaceOrder';
 import ContinueOrder from './Pages/ContinueOrder';
+import Payment from './Pages/Payment';
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
         <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
         </Route>
+        <Route path='/payment' element={<Payment />} />
       </Routes>
 
       <UserHeader />

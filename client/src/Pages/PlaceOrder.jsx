@@ -71,7 +71,7 @@ function PlaceOrder() {
             <div className='flex'>
                 <p>Total Price: ₹{totalPrice}</p>
                 <Link to={'/continue-order'} >
-                    <button className='bg-green-700 rounded-lg font-semibold uppercase p-2 text-white'>Confirm Order</button>
+                    <button className='bg-green-700 rounded-lg font-semibold uppercase p-2 text-white'>Continue Order</button>
                 </Link>
             </div>
         </div>
