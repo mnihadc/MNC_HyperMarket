@@ -25,8 +25,6 @@ function PlaceOrder() {
                     }).filter(Boolean);
 
                     setCartItems(updatedCartItems);
-                    console.log(updatedCartItems);
-
 
                     const total = updatedCartItems.reduce((acc, item) => {
                         return acc + (item.offerprice * item.quantity);

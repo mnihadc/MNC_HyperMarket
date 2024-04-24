@@ -5,6 +5,7 @@ import authRouter from './routes/auth.route.js';
 import userRouter from './routes/user.route.js';
 import listingRouter from './routes/listing.route.js';
 import cartRouter from './routes/cart.route.js';
+import orderRouter from './routes/order.route.js';
 import cookieParser from 'cookie-parser';
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use('/api/listing', listingRouter);
 app.use('/api/cart', cartRouter);
+app.use('/api/order', orderRouter);
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000!');
