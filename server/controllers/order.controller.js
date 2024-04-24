@@ -3,7 +3,7 @@ import Cart from "../models/cart.modal.js";
 
 export const createOrder = async (req, res) => {
     try {
-        const { user, cart, addressId, paymentMethod ,totalPrice } = req.body;
+        const { user, cart, addressId, paymentMethod, totalPrice } = req.body;
 
         const order = new Order({
             user,
@@ -21,3 +21,13 @@ export const createOrder = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+export const getOrders = async (req, res, next) => {
+    try {
+        const { userId } = req.params;
+        const order = await Order.find({ user: userId });
+        res.status(200).json(order);
+    } catch (error) {
+        next(error);
+    }
+}

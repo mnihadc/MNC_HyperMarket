@@ -42,7 +42,6 @@ export default function Payment() {
                     }).filter(Boolean);
 
                     setCartItems(updatedCartItems);
-                    console.log(updatedCartItems);
 
                     const total = updatedCartItems && updatedCartItems.length > 0 ? updatedCartItems.reduce((acc, item) => {
                         return acc + (item.offerprice * item.quantity);
@@ -109,8 +108,6 @@ export default function Payment() {
                 setAlertMessage('Your order is placed');
                 setTimeout(() => {
                     setAlertMessage('');
-                    // Navigate to order page
-                    // Replace the code below with your actual navigation logic
                     window.location.href = '/order';
                 }, 3000);
             } else {
