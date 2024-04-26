@@ -17,6 +17,7 @@ import Responsive from './Components/Responsive';
 import PlaceOrder from './Pages/PlaceOrder';
 import ContinueOrder from './Pages/ContinueOrder';
 import Payment from './Pages/Payment';
+import OrderDetails from './Pages/OrderDetails';
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
         <Route path='/address' element={<Address />} />
         <Route path='/create-listings' element={<CreateListings />} />
         <Route path='/place-order' element={<PlaceOrder />} />
+        <Route path='order/:orderId' element={<OrderDetails />} />
         <Route path='/continue-order' element={<ContinueOrder />} />
         <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
