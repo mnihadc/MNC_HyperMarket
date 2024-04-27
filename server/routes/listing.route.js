@@ -1,9 +1,10 @@
 import express from 'express';
-import { createListings, showListings } from '../controllers/listing.controller.js';
+import { Search, createListings, showListings } from '../controllers/listing.controller.js';
 
 const router = express.Router();
 
 router.post('/create-listings', createListings);
-router.get('/show-listings',showListings);
+router.get('/show-listings', showListings);
+router.get('/search', Search);
 
 export default router;

@@ -18,6 +18,7 @@ import PlaceOrder from './Pages/PlaceOrder';
 import ContinueOrder from './Pages/ContinueOrder';
 import Payment from './Pages/Payment';
 import OrderDetails from './Pages/OrderDetails';
+import Search from './Pages/Search';
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
         <Route path='/place-order' element={<PlaceOrder />} />
         <Route path='order/:orderId' element={<OrderDetails />} />
         <Route path='/continue-order' element={<ContinueOrder />} />
+        <Route path='/search' element={<Search />} />
         <Route element={<PrivateRoute />}>
           <Route path='/profile' element={<Profile />} />
         </Route>
