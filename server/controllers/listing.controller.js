@@ -34,18 +34,21 @@ export const showListings = async (req, res, next) => {
 
 export const Search = async (req, res, next) => {
     try {
-        const { category, productName } = req.query;
+        const { productName, sortBy } = req.query;
         const conditions = {};
-        if (category) {
-            conditions.category = category;
-        }
         if (productName) {
-            conditions.productName = { $regex: productName, $options: 'i' }; 
+            conditions.productName = { $regex: productName, $options: 'i' };
         }
-        const searchResults = await Listing.find(conditions);
+        let searchResults;
+        if (sortBy) {
+            searchResults = await Listing.find(conditions).sort(sortBy);
+        } else {
+            searchResults = await Listing.find(conditions);
+        }
+
         res.json(searchResults);
     } catch (error) {
         console.error('Error searching products:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};

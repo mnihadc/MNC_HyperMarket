@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-const SupermarketListing = () => {
+const SupermarketListing = ({ searchResults }) => {
     const [listing, setListing] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -16,12 +16,20 @@ const SupermarketListing = () => {
         const fetchListing = async () => {
             try {
                 setLoading(true);
-                const res = await fetch('/api/listing/show-listings');
-                const data = await res.json();
-                if (data.success === false) {
-                    setError(true);
-                    setLoading(false);
-                    return;
+                let data = null;
+
+                if (searchResults) {
+                    // If searchResults prop is provided, use it directly
+                    data = searchResults;
+                } else {
+                    // Fetch all listings
+                    const res = await fetch('/api/listing/show-listings');
+                    data = await res.json();
+                    if (data.success === false) {
+                        setError(true);
+                        setLoading(false);
+                        return;
+                    }
                 }
 
                 setListing(data);
@@ -34,7 +42,7 @@ const SupermarketListing = () => {
         };
 
         fetchListing();
-    }, []);
+    }, [searchResults]);
 
     const handleAdToCart = async (productId, quantity, offerprice, mrP) => {
 
@@ -67,7 +75,7 @@ const SupermarketListing = () => {
         if (!listing) {
             return null;
         }
-
+      
         const rows = [];
         for (let i = 0; i < listing.length; i += 3) {
             const rowListings = listing.slice(i, i + 3);
