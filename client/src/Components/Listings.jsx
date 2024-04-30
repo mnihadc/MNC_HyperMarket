@@ -89,24 +89,39 @@ const SupermarketListing = ({ searchResults }) => {
         }
 
         const rows = [];
-        for (let i = 0; i < listing.length; i += 3) {
-            const rowListings = listing.slice(i, i + 3);
+        const isMobile = window.innerWidth < 768;
+        const cardsPerRow = isMobile ? 3 : 5;
+        const cardWidth = isMobile ? "calc(100% / 3 - 24px)" : "250px";
+        const cardMargin = isMobile ? "0 12px" : "3px";
+
+        for (let i = 0; i < listing.length; i += cardsPerRow) {
+            const rowListings = listing.slice(i, i + cardsPerRow);
             const row = (
-                <div className="flex justify-between mt-2" key={`row-${i / 3}`}>
+                <div className="flex justify-between mt-2 ml-1 mr-1 p-1" key={`row-${i / cardsPerRow}`}>
                     {rowListings.map((product) => (
-                        <div key={product._id} className="card bg-slate-200" style={{ width: "30%", height: "220px" }}>
-                            <img src={product.imageUrls} className="card-img-top" alt={product.productName} style={{ height: "105px", objectFit: "contain" }} />
-                            <div className="p-1" style={{ height: "70px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                <p className="card-title font-semibold text-1xl" style={{ overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitBoxOrient: "vertical", maxHeight: "4em" }}>
+                        <div key={product._id} className="card bg-slate-200" style={{ width: cardWidth, height: "270px", margin: cardMargin, }}>
+                            <img
+                                src={product.imageUrls}
+                                className="card-img-top rounded-md"
+                                alt={product.productName}
+                                style={{ height: "150px", width: "170px", margin: "auto" }}
+                            />
+                            <div className="text-center" style={{ height: "80px" }}>
+                                <p className="text-center card-title font-semibold text-1xl" style={{ overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitBoxOrient: "vertical", maxHeight: "4em" }}>
                                     {product.productName}
                                 </p>
-                                <p className="card-title" >
-                                    {product.quantity[0]}
-                                    {product.mrp[0]}
-                                    {product.offerPrice[0]}
-                                </p>
+                                <p>{product.quantity[0]}</p>
+                                <div className='flex justify-center gap-2'>
+                                    <p className="card-title text-center" style={{ textDecoration: 'line-through' }}>
+                                        ₹{product.mrp[0]}
+                                    </p>
+                                    <p className="card-title text-center font-semibold">
+                                        ₹{product.offerPrice[0]}
+                                    </p>
+                                </div>
                             </div>
                             <hr />
+
                             <button
                                 className={`btn btn-success justify-center p-1`}
                                 onClick={() => handleAdToCart(product._id, product.quantity[0], product.offerPrice[0], product.mrp[0])}
@@ -121,6 +136,7 @@ const SupermarketListing = ({ searchResults }) => {
         }
         return rows;
     };
+
 
     return (
         <div className='pb-16'>

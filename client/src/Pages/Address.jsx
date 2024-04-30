@@ -31,7 +31,6 @@ const Address = () => {
     }, []);
 
     useEffect(() => {
-        // Dispatch action to update Redux store with selected address ID
         if (userAddress && userAddress.length > 0 && !selectedAddressId) {
             dispatch(setSelectedAddressId(userAddress[0]._id));
         }
@@ -42,35 +41,36 @@ const Address = () => {
     };
 
     return (
-        <div className='p-10 max-w-lg mx-auto border rounded-lg' style={{ marginTop: '3rem' }}>
-            <h1 className="text-2xl font-bold mb-4">Your <span className='text-blue-900'>Address</span></h1>
+        <div className='p-16' >
+            <div className='p-3 bg-slate-200 max-w-lg mx-auto border rounded-lg' style={{ marginTop: '3rem' }}>
+                <h1 className="text-2xl font-bold mb-4">Your <span className='text-blue-900'>Address</span></h1>
 
-            <Link to="/create-address" className="mb-8 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" style={{ marginLeft: '7rem' }}>
-                Create address
-            </Link>
+                <Link to="/create-address" className="mb-8 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" style={{ marginLeft: '7rem' }}>
+                    Create address
+                </Link>
 
-            {loading ? (
-                <p>Loading...</p>
-            ) : userAddress && userAddress.length > 0 ? (
-                userAddress.map((address) => (
-                    <div
-                        key={address._id}
-                        className={`p-8 rounded shadow-md max-w-md mx-auto text-center mb-4 ${selectedAddressId === address._id ? 'border-2 border-green-500' : ''}`}
-                        onClick={() => handleSelectAddress(address._id)}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        <h3 className="text-lg font-semibold mb-2">{address.firstName}'s Address</h3>
-                        <p className="text-gray-600">
-                            {address.deliveryAddress}, {address.city}, {address.state}, {address.pinCode}<br />
-                            Contact: {address.contact}<br />
-                            Email: {address.email}
-                        </p>
-                    </div>
-                ))
-            ) : (
-                <p>No addresses found.</p>
-            )}
-
+                {loading ? (
+                    <p>Loading...</p>
+                ) : userAddress && userAddress.length > 0 ? (
+                    userAddress.map((address) => (
+                        <div
+                            key={address._id}
+                            className={`p-8 rounded shadow-md max-w-md mx-auto text-center mb-4 ${selectedAddressId === address._id ? 'border-2 border-green-500' : ''}`}
+                            onClick={() => handleSelectAddress(address._id)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <h3 className="text-lg font-semibold mb-2">{address.firstName}'s Address</h3>
+                            <p className="text-gray-600">
+                                {address.deliveryAddress}, {address.city}, {address.state}, {address.pinCode}<br />
+                                Contact: {address.contact}<br />
+                                Email: {address.email}
+                            </p>
+                        </div>
+                    ))
+                ) : (
+                    <p>No addresses found.</p>
+                )}
+            </div>
         </div>
     );
 };

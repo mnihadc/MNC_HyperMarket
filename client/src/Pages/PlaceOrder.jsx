@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
+
 function PlaceOrder() {
     const { currentUser } = useSelector((state) => state.user);
     const [cartItems, setCartItems] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -25,7 +28,6 @@ function PlaceOrder() {
                     }).filter(Boolean);
 
                     setCartItems(updatedCartItems);
-
                     const total = updatedCartItems.reduce((acc, item) => {
                         return acc + (item.offerprice * item.quantity);
                     }, 0);
@@ -44,30 +46,48 @@ function PlaceOrder() {
 
     return (
         <div className='pt-16'>
-            <div className="flex items-center mb-4">
+            <div className="flex items-center mb-1 p-3">
                 <Link to={'/cart'}>
-                    <button className='text-3xl ml-1'>&#8592;</button>
+                    <button className='text-5xl ml-2 p-2 mb-2'>&#8592;</button>
                 </Link>
-                <h2 className='font-semibold ml-1'>Order Summary</h2>
+                <h2 className='font-semibold ml-1 text-2xl'>Order Summary</h2>
             </div>
-            <div>
+
+            <div className={`ml-1 row row-cols-1 row-cols-md-${isMobile ? '2' : '4'}`}>
                 {cartItems.map(item => (
-                    <div key={item._id} style={{ display: 'flex', alignItems: 'center', border: '1px solid #ccc', padding: '1rem' }}>
-                        <img src={item.imageUrls} alt={item.productName} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px', marginRight: '1rem' }} />
-                        <div className='flex-col'>
-                            <p className='font-semibold'>{item.productName}</p>
-                            <p>Size: {item.size}</p>
-                            <p className=''>Quantity: {item.quantity}</p>
-                        </div>
-                        <div className='pl-2'>
-                            <p>MRP: {item.mrP}</p>
-                            <p>OfferPrice: {item.offerprice}</p>
+                    <div key={item._id} className={`col ${isMobile ? 'mb-3' : ''}`} style={{ width: isMobile ? '48%' : '20%' }}>
+                        <div className='card p-2 bg-blue-200'>
+                            <div className='flex'>
+                                <img src={item.imageUrls} className='card-img-top w-32 h-32' alt='Default' />
+                                <div className='p-2 ml-5'>
+                                    <h3 className='p-1 card-title font-semibold'>{item.productName}</h3>
+                                    <p className='card-text p-1'>
+                                        Quantity:
+                                        <span style={{ marginRight: '5px' }}></span>
+                                        {item.quantity}
+                                    </p>
+                                    <p className='card-text p-1'>
+                                        Size:
+                                        <span style={{ marginRight: '5px' }}></span>
+                                        {item.size}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className='card-body flex justify-center gap-3'>
+                                <div>
+                                    <div className='flex gap-2'>
+                                        <p className='card-text text-decoration-line-through'>MRP: ₹{item.mrP}</p>
+                                        <p className='card-text font-semibold'>offerPrice: ₹{item.offerprice}</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ))}
             </div>
-            <div className='flex'>
-                <p>Total Price: ₹{totalPrice}</p>
+            <div className='flex justify-center items-center p-2'>
+                <p className='font-semibold text-lg p-2'>Total Items in Cart: <span className='text-2xl'>{cartItems.length}</span></p>
+                <p className='font-semibold text-lg p-2'>Total Price: <span className='text-2xl'>₹{totalPrice}</span></p>
                 <Link to={'/continue-order'} >
                     <button className='bg-green-700 rounded-lg font-semibold uppercase p-2 text-white'>Continue Order</button>
                 </Link>

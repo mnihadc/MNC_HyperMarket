@@ -29,42 +29,41 @@ function ContinueOrder() {
 
     return (
         <div className='pt-16'>
-            <div className='flex item-center'>
+            <div className='flex item-center p-2 ml-1'>
                 <Link to={'/place-order'}>
-                    <button className='text-3xl ml-1'>&#8592;</button>
+                    <button className='text-5xl'>&#8592;</button>
                 </Link>
-                <h2 className='font-semibold ml-1 mt-2'>Continue Order</h2>
+                <h2 className='font-semibold mt-3 ml-2 text-2xl'>Continue Order</h2>
             </div>
-            <div className="my-4">
-                <h3 className="font-semibold ml-3">Delivery Address</h3>
-                {address && (
-                    <div className='m-2'>
-                        <div className='text-center bg-gray-200 border-2 border-blue-700 rounded-lg p-2'>
-                            <p>{address.firstName} {address.lastName}</p>
-                            <p>{address.landmark}, {address.pinCode}</p>
-                            <p>{address.city}, {address.state}</p>
-                            <p>{address.deliveryAddress}</p>
-                            <p>{address.email} </p>
-                            <div className='flex justify-content-center'>
+            <div className="my-4 flex justify-center">
+                <div className='text-center bg-gray-200 border-2 border-blue-700 rounded-lg p-4' style={{ width: '40%' }}>
+                    {address && (
+                        <div className='gap-2'>
+                             <h3 className="font-semibold p-2">Delivery Address</h3>
+                            <p className='p-1'>{address.firstName} {address.lastName}</p>
+                            <p className='p-1'>{address.landmark}, {address.pinCode}</p>
+                            <p className='p-1'>{address.city}, {address.state}</p>
+                            <p className='font-semibold p-1'>{address.deliveryAddress}</p>
+                            <p className='p-1'>{address.email} </p>
+                            <div className='flex justify-content-center p-1'>
                                 <p className=''>contact: {address.contact}</p>
                                 <Link to="/address">
-                                    <button className='bg-slate-500 rounded-md text-sm font-medium p-1 text-white ml-2'>Change</button>
+                                    <button className='bg-slate-500 rounded-md text-sm font-medium p-2 text-white ml-5'>Change</button>
                                 </Link>
-
                             </div>
                         </div>
-                    </div>
-                )}
-                {!address && (
-                    <Link to="/create-address">
-                        <button className="bg-blue-500 text-white py-2 px-4 rounded-lg">Create Address</button>
-                    </Link>
-                )}
+                    )}
+                    {!address && (
+                        <Link to="/address">
+                            <button className="bg-blue-500 text-white py-2 px-4 rounded-lg">Create Address</button>
+                        </Link>
+                    )}
+                </div>
             </div>
             {address && (
-                <div className='flex'>
+                <div className='' style={{ maxWidth: '50%', marginLeft: 'auto' }}>
                     <Link to='/payment'>
-                        <button className='bg-green-700 rounded-lg font-semibold uppercase p-1 text-white ml-2'>Place Order</button>
+                        <button className='bg-green-700 rounded-lg font-semibold uppercase p-2 text-white ml-20'>Place Order</button>
                     </Link>
                 </div>
             )}

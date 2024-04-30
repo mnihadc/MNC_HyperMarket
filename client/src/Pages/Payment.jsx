@@ -121,67 +121,71 @@ export default function Payment() {
     };
 
     return (
-        <div className='pt-16 pb-16'>
-            {loading && <div className="overlay">Loading...</div>}
-            {alertMessage && <div style={alertStyle}>{alertMessage}</div>}
-            <div className="flex flex-col space-y-2">
-                <div className={`flex border border-gray-200 shadow-md p-4 rounded-lg gap-2 bg-green-50 ${cashOnDelivery ? 'opacity-50' : ''}`}>
-                    <h2 className="text-xl font-semibold mb-2">UPI</h2>
-                    <button
-                        className="focus:outline-none mb-2"
-                        onClick={toggleUPIInfo}
-                        disabled={cashOnDelivery}
-                    >
-                        {showUPIInfo ? '▲' : '▼'}
-                    </button>
-                    {showUPIInfo && (
-                        <div className="mt-2">
-                            <p>UPI is a real-time payment system that enables instant money transfers between bank accounts using smartphones. It's convenient, fast, and widely used in India for making payments and other banking transactions.</p>
-                        </div>
-                    )}
+
+        <div className='pt-20 pb-16'>
+            <p className='p-2 font-semibold text-2xl text-center'>Payment</p>
+            <div className='flex justify-center items-center h-full'>
+                {loading && <div className="overlay">Loading...</div>}
+                {alertMessage && <div style={alertStyle}>{alertMessage}</div>}
+                <div className="p-2 flex flex-col space-y-2">
+                    <div className={`flex border border-gray-200 shadow-md p-4 max-w-screen-md rounded-lg gap-2 bg-green-50 ${cashOnDelivery ? 'opacity-50' : ''}`}>
+                        <h2 className="text-xl font-semibold mb-2">UPI</h2>
+                        <button
+                            className="focus:outline-none mb-2"
+                            onClick={toggleUPIInfo}
+                            disabled={cashOnDelivery}
+                        >
+                            {showUPIInfo ? '▲' : '▼'}
+                        </button>
+                        {showUPIInfo && (
+                            <div className="mt-2">
+                                <p>UPI is a real-time payment system that enables instant money transfers between bank accounts using smartphones. It's convenient, fast, and widely used in India for making payments and other banking transactions.</p>
+                            </div>
+                        )}
+                    </div>
+                    <div className={`flex gap-2 border border-gray-200 max-w-screen-md shadow-md p-4 rounded-lg bg-green-50 ${cashOnDelivery ? 'opacity-50' : ''}`}>
+                        <h2 className="text-xl font-semibold mb-2">Net Banking</h2>
+                        <button
+                            className="focus:outline-none"
+                            onClick={toggleNetBankingInfo}
+                            disabled={cashOnDelivery}
+                        >
+                            {showNetBankingInfo ? '▲' : '▼'}
+                        </button>
+                        {showNetBankingInfo && (
+                            <div className="mt-2">
+                                <p>Razorpay is India's leading payment gateway, offering secure online payment solutions for businesses. With Razorpay, businesses can accept payments via various channels, ensuring a smooth checkout experience for customers.</p>
+                            </div>
+                        )}
+                    </div>
+                    <div className="flex gap-2 border border-gray-200 max-w-screen-md shadow-md p-4 rounded-lg bg-green-50">
+                        <h2 className="text-xl font-semibold mb-2 p-2">
+                            Cash on Delivery
+                        </h2>
+                        <button
+                            className="focus:outline-none ml-2"
+                            onClick={toggleCashOnDeliveryInfo}
+                        >
+                            {showCashOnDeliveryInfo ? '▲' : '▼'}
+                        </button>
+                        {showCashOnDeliveryInfo && (
+                            <div className="flex items-center pr-8">
+                                <label className="">Cash on Delivery</label>
+                                <input
+                                    type="checkbox"
+                                    checked={cashOnDelivery}
+                                    onChange={handleCashOnDeliveryChange}
+                                />
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <div className={`flex gap-2 border border-gray-200 shadow-md p-4 rounded-lg bg-green-50 ${cashOnDelivery ? 'opacity-50' : ''}`}>
-                    <h2 className="text-xl font-semibold mb-2">Net Banking</h2>
-                    <button
-                        className="focus:outline-none"
-                        onClick={toggleNetBankingInfo}
-                        disabled={cashOnDelivery}
-                    >
-                        {showNetBankingInfo ? '▲' : '▼'}
-                    </button>
-                    {showNetBankingInfo && (
-                        <div className="mt-2">
-                            <p>Razorpay is India's leading payment gateway, offering secure online payment solutions for businesses. With Razorpay, businesses can accept payments via various channels, ensuring a smooth checkout experience for customers.</p>
-                        </div>
-                    )}
-                </div>
-                <div className="flex gap-2 border border-gray-200 shadow-md p-4 rounded-lg bg-green-50">
-                    <h2 className="text-xl font-semibold mb-2">
-                        Cash on Delivery
-                    </h2>
-                    <button
-                        className="focus:outline-none"
-                        onClick={toggleCashOnDeliveryInfo}
-                    >
-                        {showCashOnDeliveryInfo ? '▲' : '▼'}
-                    </button>
-                    {showCashOnDeliveryInfo && (
-                        <div className="flex items-center pr-8">
-                            <label className="">Cash on Delivery</label>
-                            <input
-                                type="checkbox"
-                                checked={cashOnDelivery}
-                                onChange={handleCashOnDeliveryChange}
-                            />
-                        </div>
-                    )}
-                </div>
-            </div>
+            </div >
             <div className='flex justify-center mt-4'>
                 <button className='bg-green-700 rounded-lg font-semibold uppercase p-2 text-white' onClick={handlePlaceOrder}>
                     Confirm Order
                 </button>
             </div>
-        </div >
+        </div>
     );
 }

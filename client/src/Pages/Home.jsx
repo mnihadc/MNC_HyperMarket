@@ -6,7 +6,7 @@ function Home() {
     return (
         <div className="mx-auto">
             <SwiperImage />
-            <div className="mt-1 p-1">
+            <div className="mt-1 p-3">
                 <h2 className="text-2xl font-semibold">Today Offer's</h2>
                 <SupermarketListing />
             </div>

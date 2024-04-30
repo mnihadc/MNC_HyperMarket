@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 import { Link } from 'react-router-dom';
+
 function Cart() {
   const { currentUser } = useSelector((state) => state.user);
   const [filteredCartItems, setFilteredCartItems] = useState([]);
@@ -14,7 +15,6 @@ function Cart() {
     const fetchCart = async () => {
       setLoading(true);
       try {
-
         const cartRes = await fetch(`/api/cart/getCart/${currentUser._id}`);
         const productRes = await fetch('/api/cart/getCartProduct');
         const cartData = await cartRes.json();
@@ -32,7 +32,7 @@ function Cart() {
           const total = filteredItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);
           setTotalPrice(total);
           setFilteredCartItems(filteredItems);
-          
+
         } else {
           setFilteredCartItems([]);
           setTotalPrice(0);
@@ -75,7 +75,6 @@ function Cart() {
 
   const updateCartItemQuantity = async (userId, itemId, newQuantity) => {
     try {
-
       const response = await fetch(`/api/cart/updateCartQuantity/${userId}/${itemId}`, {
         method: 'post',
         headers: {
@@ -128,6 +127,7 @@ function Cart() {
     const total = updatedCartItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);
     setTotalPrice(total);
   };
+
   const updateCartPrice = async (itemId, newOfferPrice, newMrP) => {
     try {
       const response = await fetch(`/api/cart/updateCartPrice/${currentUser._id}/${itemId}`, {
@@ -153,7 +153,6 @@ function Cart() {
         method: 'DELETE',
       });
       if (response.ok) {
-
         const updatedCartItems = filteredCartItems.filter(item => item._id !== itemId);
         setFilteredCartItems(updatedCartItems);
         updateTotalPrice(updatedCartItems);
@@ -164,6 +163,7 @@ function Cart() {
       console.error('Error removing item from cart:', error);
     }
   };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -172,12 +172,12 @@ function Cart() {
     <div className='pt-20'>
       <div className='container m-auto mt-2'>
         {filteredCartItems.length === 0 ? (
-          <div className='text-2xl p-5 font-semibold text-blue'>No items in cart</div>
+          <div className='text-2xl p-5 font-semibold text-blue text-center'>No items in cart</div>
         ) : (
-          <div className='row row-cols-1 row-cols-md-3'>
+          <div className={`row row-cols-1 row-cols-md-${isMobile ? '2' : '4'}`}>
             {filteredCartItems.map((item, index) => (
-              <div key={item._id} className={`col p-1 ${isMobile ? 'mb-3' : ''}`}>
-                <div className='card p-2 bg-slate-100'>
+              <div key={item._id} className={`col ${isMobile ? 'mb-3' : ''}`} style={{ width: isMobile ? '50%' : '25%' }}>
+                <div className='card p-2 bg-blue-200'>
                   <div className='flex'>
                     <img src={item.imageUrls} className='card-img-top w-24 h-24' alt='Default' />
                     <div className='p-2'>
@@ -223,7 +223,6 @@ function Cart() {
               </div>
             ))}
           </div>
-
         )}
         {filteredCartItems.length > 0 && (
           <div className='pb-16 flex justify-center gap-3'>

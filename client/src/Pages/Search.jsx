@@ -31,17 +31,17 @@ function Search() {
 
   return (
     <div className='pt-16'>
-      <div className='text-center mt-2'>
+      <div className='text-center mt-4'>
         <input
           type='text'
           id='searchTerm'
           placeholder='Search'
           value={searchTerm}
-          className='bg-slate-300 p-2 rounded-md'
+          className='bg-slate-300 p-3 rounded-md w-64'
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <div className="mt-4">
+      <div className="mt-3 text-center ml-32">
         <label htmlFor="sortBy" className='font-semibold ml-2'>Sort:</label>
         <select
           id="sortBy"
@@ -57,7 +57,7 @@ function Search() {
         </select>
       </div>
       <div className='p-2'>
-        <h2 className='font-semibold'>Search Results</h2>
+        <h2 className='font-semibold text-xl p-1'>Search Results</h2>
         <SupermarketListing searchResults={searchResults} />
       </div>
     </div>
