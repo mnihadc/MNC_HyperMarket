@@ -125,7 +125,7 @@ const SupermarketListing = ({ searchResults }) => {
                             <button
                                 className={`btn btn-success justify-center p-1`}
                                 onClick={() => handleAdToCart(product._id, product.quantity[0], product.offerPrice[0], product.mrp[0])}
-                                style={{ height: "40px", backgroundColor: productsInCart.includes(product._id) ? 'blue' : 'green' }}>
+                                style={{ height: "40px", backgroundColor: productsInCart.includes(product._id) ? '#00008B' : 'green' }}>
                                 {productsInCart.includes(product._id) ? 'In Cart' : 'Add to Cart'}
                             </button>
                         </div>

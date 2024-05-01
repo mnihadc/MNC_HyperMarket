@@ -22,6 +22,11 @@ function Profile() {
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [editableFields, setEditableFields] = useState({
+    username: false,
+    email: false,
+    password: false,
+  });
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -55,6 +60,10 @@ function Profile() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const handleEdit = (field) => {
+    setEditableFields({ ...editableFields, [field]: true });
   };
 
   const handleSubmit = async (e) => {
@@ -118,8 +127,8 @@ function Profile() {
     }
   }
   return (
-    <div className='p-12 max-w-lg mx-auto'>
-      <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
+    <div className='p-24 max-w-2xl mx-auto bg-gray-100 rounded-lg'>
+      <h1 className='text-3xl font-semibold text-center text-blue-800 mb-6'>Profile</h1>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input
           onChange={(e) => setFile(e.target.files[0])}
@@ -145,33 +154,72 @@ function Profile() {
             ''
           )}
         </p>
-        <input
-          defaultValue={currentUser.username}
-          type='text'
-          placeholder='username'
-          className='border p-3 rounded-lg'
-          id='username'
-          onChange={handleChange}
-        />
-        <input
-          defaultValue={currentUser.email}
-          type='email'
-          placeholder='email'
-          id='email'
-          onChange={handleChange}
-          className='border p-3 rounded-lg'
-        />
-        <input
-          type='password'
-          placeholder='password'
-          onChange={handleChange}
-          id='password'
-          className='border p-3 rounded-lg'
-        />
+        <div className='relative'>
+          <input
+            defaultValue={currentUser.username}
+            type='text'
+            placeholder='username'
+            className='border-5 p-3 rounded-lg'
+            id='username'
+            style={{ width: '85%' }} 
+            onChange={handleChange}
+            disabled={!editableFields.username}
+          />
+          {!editableFields.username && (
+            <button
+              type='button'
+              onClick={() => handleEdit('username')}
+              className='absolute right-0 top-0 mt-3  text-blue-600 hover:text-blue-800'
+            >
+              Edit
+            </button>
+          )}
+        </div>
+        <div className='relative'>
+          <input
+            defaultValue={currentUser.email}
+            type='email'
+            placeholder='email'
+            id='email'
+            style={{ width: '85%' }} 
+            onChange={handleChange}
+            className='border-5 p-3 rounded-lg'
+            disabled={!editableFields.email}
+          />
+          {!editableFields.email && (
+            <button
+              type='button'
+              onClick={() => handleEdit('email')}
+              className='absolute right-0 top-0 mt-3  text-blue-600 hover:text-blue-800'
+            >
+              Edit
+            </button>
+          )}
+        </div>
+        <div className='relative'>
+          <input
+            type='password'
+            placeholder='password'
+            onChange={handleChange}
+            id='password'
+            style={{ width: '85%' }} 
+            className='border-5  p-3 rounded-lg'
+            disabled={!editableFields.password}
+          />
+          {!editableFields.password && (
+            <button
+              type='button'
+              onClick={() => handleEdit('password')}
+              className='text-sm text-blue-600 ml-3 hover:text-blue-800'
+            >
+              Change Password
+            </button>
+          )}
+        </div>
 
         <button
           disabled={loading}
-          className='bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80'
+          className='bg-blue-500 text-white rounded-lg p-3 text-lg uppercase hover:bg-blue-800 disabled:opacity-80'
         >
           {loading ? 'Loading...' : 'Update'}
         </button>
@@ -183,7 +231,7 @@ function Profile() {
         <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>Sign-Out</span>
       </div>
       <p className='text-red-700 mt-5'>{error ? error : ''}</p>
-      <p className='green-red-700 mt-5'>{updateSuccess ? 'User is updated successfully' : ''}</p>
+      <p className='text-green-700 mt-5'>{updateSuccess ? 'User is updated successfully' : ''}</p>
     </div>
   );
 }
