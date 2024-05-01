@@ -66,3 +66,17 @@ export const getAddress = async (req, res, next) => {
     }
 }
 
+export const removeAddress = async (req, res, next) => {
+    try {
+        const addressId = req.params.id;
+        const address = await Address.findById(addressId);
+        if (!address) {
+            return res.status(404).json({ success: false, message: 'Address not found' });
+        }
+        await Address.findByIdAndDelete(addressId);
+        res.status(200).json({ success: true, message: 'Address removed successfully' });
+    } catch (error) {
+        console.error('Error removing address:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}
