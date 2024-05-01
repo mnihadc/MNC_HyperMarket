@@ -63,7 +63,6 @@ const SupermarketListing = ({ searchResults }) => {
     const handleProductClick = (productId) => {
         const product = listing.find(item => item._id === productId);
         setClickedProduct(product);
-        console.log(product);
         setIsListingDetailsOpen(true);
     };
 
