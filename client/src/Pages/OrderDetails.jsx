@@ -91,7 +91,7 @@ function OrderDetails() {
                     <p>Quantity: {item.quantity}</p>
                   </div>
                   <div className='flex gap-2 p-1'>
-                    <p>MRP: ₹{item.mrP}</p>
+                    <p style={{ textDecoration: 'line-through' }}>MRP: ₹{item.mrP}</p>
                     <p>Offer Price: ₹{item.offerprice}</p>
                   </div>
                 </div>

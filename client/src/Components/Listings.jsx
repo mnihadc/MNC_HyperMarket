@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import ShortPage from '../../shortPage';
+import ListingDetails from './ListingDetails';
 
 const SupermarketListing = ({ searchResults }) => {
     const [listing, setListing] = useState(null);
@@ -8,6 +10,8 @@ const SupermarketListing = ({ searchResults }) => {
     const [error, setError] = useState(false);
     const [cart, setCart] = useState([]);
     const [productsInCart, setProductsInCart] = useState([]);
+    const [isListingDetailsOpen, setIsListingDetailsOpen] = useState(false);
+    const [clickedProduct, setClickedProduct] = useState(null);
     const { currentUser } = useSelector((state) => state.user);
     const navigate = useNavigate();
 
@@ -55,6 +59,13 @@ const SupermarketListing = ({ searchResults }) => {
 
         fetchListing();
     }, [searchResults]);
+
+    const handleProductClick = (productId) => {
+        const product = listing.find(item => item._id === productId);
+        setClickedProduct(product);
+        console.log(product);
+        setIsListingDetailsOpen(true);
+    };
 
     const handleAdToCart = async (productId, quantity, offerprice, mrP) => {
         try {
@@ -104,6 +115,7 @@ const SupermarketListing = ({ searchResults }) => {
                                 src={product.imageUrls}
                                 className="card-img-top rounded-md"
                                 alt={product.productName}
+                                onClick={() => handleProductClick(product._id)}
                                 style={{ height: "150px", width: "170px", margin: "auto" }}
                             />
                             <div className="text-center" style={{ height: "80px" }}>
@@ -134,7 +146,18 @@ const SupermarketListing = ({ searchResults }) => {
             );
             rows.push(row);
         }
-        return rows;
+        return (
+            <div className='pb-16'>
+                {loading && <p>Loading...</p>}
+                {error && <p>Error loading listings.</p>}
+                {rows}
+                {isListingDetailsOpen && (
+                    <ShortPage onClose={() => setIsListingDetailsOpen(false)}>
+                        <ListingDetails product={clickedProduct} onClose={() => setIsListingDetailsOpen(false)} />
+                    </ShortPage>
+                )}
+            </div>
+        )
     };
 
 
