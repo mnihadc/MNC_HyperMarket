@@ -1,8 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function About() {
   return (
     <div className='pt-24 pb-10 flex justify-center'>
+      <Link to={'/profile'}>
+        <button className='text-5xl ml-6 p-1  bg-slate-400 rounded-lg '>&#8592;</button>
+      </Link>
       <div className='bg-gray-200 p-8 ml-32 mr-32 rounded-lg'>
         <h1 className='text-2xl font-semibold'>About Page</h1>
         <div className='mt-1'>
