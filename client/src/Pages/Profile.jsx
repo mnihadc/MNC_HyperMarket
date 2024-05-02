@@ -11,8 +11,11 @@ import {
   deleteUserFailure,
   deleteUserStart,
   deleteUserSuccess,
-  signoutUserStart, signInFailure, signoutUserSuccess,
+  signoutUserStart,
+  signInFailure,
+  signoutUserSuccess,
 } from '../redux/user/userSlice.js';
+import { Link } from 'react-router-dom';
 
 function Profile() {
   const fileRef = useRef(null);
@@ -109,7 +112,7 @@ function Profile() {
   };
 
   if (!currentUser) {
-    return <div>Loading...</div>; // or any other loading indicator
+    return <div>Loading...</div>;
   }
 
   const handleSignOut = async () => {
@@ -125,10 +128,38 @@ function Profile() {
     } catch (error) {
       dispatch(signInFailure(error.message));
     }
-  }
+  };
+
   return (
-    <div className='p-24 max-w-2xl mx-auto bg-gray-100 rounded-lg'>
-      <h1 className='text-3xl font-semibold text-center text-blue-800 mb-6'>Profile</h1>
+    <div className='p-24 max-w-2xl mx-auto bg-gray-200 rounded-lg'>
+      <div className="dropdown ml-96">
+          <button
+            className="btn btn-secondary btn-lg dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            More
+          </button>
+          <ul className="dropdown-menu">
+            <li>
+              <Link to="/about" className="dropdown-item text-lg font-semibold">
+                About
+              </Link>
+            </li>
+            <hr />
+            <li>
+              <Link to="/contact" className="dropdown-item text-lg font-semibold">
+                Contact
+              </Link>
+            </li>
+            <li>
+            </li>
+          </ul>
+        </div>
+      <div className='mb-4'>
+        <h1 className='text-3xl font-semibold text-blue-800 text-center'>Profile</h1>
+      </div>
       <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
         <input
           onChange={(e) => setFile(e.target.files[0])}
@@ -161,7 +192,7 @@ function Profile() {
             placeholder='username'
             className='border-5 p-3 rounded-lg'
             id='username'
-            style={{ width: '85%' }} 
+            style={{ width: '85%' }}
             onChange={handleChange}
             disabled={!editableFields.username}
           />
@@ -169,7 +200,7 @@ function Profile() {
             <button
               type='button'
               onClick={() => handleEdit('username')}
-              className='absolute right-0 top-0 mt-3  text-blue-600 hover:text-blue-800'
+              className='absolute right-0 top-0 mt-3 text-blue-600 hover:text-blue-800'
             >
               Edit
             </button>
@@ -181,7 +212,7 @@ function Profile() {
             type='email'
             placeholder='email'
             id='email'
-            style={{ width: '85%' }} 
+            style={{ width: '85%' }}
             onChange={handleChange}
             className='border-5 p-3 rounded-lg'
             disabled={!editableFields.email}
@@ -190,7 +221,7 @@ function Profile() {
             <button
               type='button'
               onClick={() => handleEdit('email')}
-              className='absolute right-0 top-0 mt-3  text-blue-600 hover:text-blue-800'
+              className='absolute right-0 top-0 mt-3 text-blue-600 hover:text-blue-800'
             >
               Edit
             </button>
@@ -202,8 +233,8 @@ function Profile() {
             placeholder='password'
             onChange={handleChange}
             id='password'
-            style={{ width: '85%' }} 
-            className='border-5  p-3 rounded-lg'
+            style={{ width: '85%' }}
+            className='border-5 p-3 rounded-lg'
             disabled={!editableFields.password}
           />
           {!editableFields.password && (
@@ -228,11 +259,13 @@ function Profile() {
         <span onClick={handleDeleteUser} className='text-red-700 cursor-pointer'>
           Delete Account
         </span>
-        <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>Sign-Out</span>
+        <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>
+          Sign-Out
+        </span>
       </div>
       <p className='text-red-700 mt-5'>{error ? error : ''}</p>
       <p className='text-green-700 mt-5'>{updateSuccess ? 'User is updated successfully' : ''}</p>
-    </div>
+    </div >
   );
 }
 
