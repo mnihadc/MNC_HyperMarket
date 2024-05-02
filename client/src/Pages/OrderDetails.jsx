@@ -37,10 +37,6 @@ function OrderDetails() {
     fetchOrderDetails();
   }, [currentUser._id, orderId]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   if (!orderDetails) {
     return <div>Order details not found</div>;
   }
@@ -53,6 +49,7 @@ function OrderDetails() {
 
   return (
     <div className='pt-16 pb-16'>
+      {loading && <p className='text-center font-semibold text-2xl'>Loading...</p>}
       <div className="flex items-center gap-2">
         <Link to={'/order'}>
           <button className='text-5xl ml-2 p-2 mb-2'>&#8592;</button>

@@ -40,10 +40,10 @@ function Order() {
 
   return (
     <div className="pt-16">
-      <h1 className="p-2 text-2xl font-bold">Orders</h1>
+      <h1 className="p-2 mt-3 ml-3 text-2xl font-bold">Orders</h1>
       <div className="p-3 ml-2 grid grid-cols-2 md:grid-cols-4 gap-4">
         {loading ? (
-          <div>Loading...</div>
+          <div className='text-center font-semibold text-2xl'>Loading...</div>
         ) : (
           orders.map(order => (
             <div key={order._id} className="border border-gray-200 rounded-lg shadow-md p-4 mb-4">

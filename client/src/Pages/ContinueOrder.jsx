@@ -7,6 +7,7 @@ function ContinueOrder() {
     const { currentUser } = useSelector((state) => state.user);
     const selectedAddressId = useSelector((state) => state.user.selectedAddressId);
     const [address, setAddress] = useState(null);
+    const [loading, setLoading] = useState(true);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -21,6 +22,8 @@ function ContinueOrder() {
                 }
             } catch (error) {
                 console.error("Error loading user's addresses:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -29,17 +32,19 @@ function ContinueOrder() {
 
     return (
         <div className='pt-16'>
+
             <div className='flex item-center p-2 ml-1'>
                 <Link to={'/place-order'}>
                     <button className='text-5xl'>&#8592;</button>
                 </Link>
                 <h2 className='font-semibold mt-3 ml-2 text-2xl'>Continue Order</h2>
             </div>
+            {loading && <p className='text-center text-xl font-semibold'>Loading...</p>}
             <div className="my-4 flex justify-center">
                 <div className='text-center bg-gray-200 border-2 border-blue-700 rounded-lg p-4' style={{ width: '40%' }}>
                     {address && (
                         <div className='gap-2'>
-                             <h3 className="font-semibold p-2">Delivery Address</h3>
+                            <h3 className="font-semibold p-2">Delivery Address</h3>
                             <p className='p-1'>{address.firstName} {address.lastName}</p>
                             <p className='p-1'>{address.landmark}, {address.pinCode}</p>
                             <p className='p-1'>{address.city}, {address.state}</p>

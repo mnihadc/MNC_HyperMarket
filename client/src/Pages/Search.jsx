@@ -6,9 +6,13 @@ function Search() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [sortBy, setSortBy] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [searchError, setSearchError] = useState('');
 
   const handleSearch = async () => {
     try {
+      setLoading(true);
+      setSearchError('');
       const response = await axios.get('/api/listing/search', {
         params: {
           productName: searchTerm,
@@ -18,6 +22,9 @@ function Search() {
       setSearchResults(response.data);
     } catch (error) {
       console.error('Error searching:', error);
+      setSearchError('Error searching. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,12 +63,19 @@ function Search() {
           <option value="createdAt">Oldest</option>
         </select>
       </div>
-      <div className='p-2'>
-        <h2 className='font-semibold text-xl p-1'>Search Results</h2>
-        <SupermarketListing searchResults={searchResults} />
-      </div>
+      {loading && <p className='text-center font-semibold text-2xl'>Loading...</p>}
+      {searchError && <p className='text-center font-semibold text-red-600'>{searchError}</p>}
+      {searchResults.length === 0 && !loading && !searchError && (
+        <p className='text-center font-semibold text-xl'>No items found</p>
+      )}
+      {searchResults.length > 0 && (
+        <div className='p-2'>
+          <h2 className='font-semibold text-xl p-1'>Search Results</h2>
+          <SupermarketListing searchResults={searchResults} />
+        </div>
+      )}
     </div>
   );
 }
 
-export default Search; 
+export default Search;

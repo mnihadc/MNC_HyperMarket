@@ -147,7 +147,11 @@ const SupermarketListing = ({ searchResults }) => {
         }
         return (
             <div className='pb-16'>
-                {loading && <p>Loading...</p>}
+                {loading && (
+                    <div className="flex justify-center items-center h-screen">
+                        <p className="text-3xl">Loading...</p>
+                    </div>
+                )}
                 {error && <p>Error loading listings.</p>}
                 {rows}
                 {isListingDetailsOpen && (
@@ -162,7 +166,7 @@ const SupermarketListing = ({ searchResults }) => {
 
     return (
         <div className='pb-16'>
-            {loading && <p>Loading...</p>}
+            {loading && <p className='text-center font-semibold text-2xl'>Loading...</p>}
             {error && <p>Error loading listings.</p>}
             {renderListings()}
         </div>

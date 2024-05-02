@@ -164,12 +164,9 @@ function Cart() {
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div className='pt-20'>
+          {loading && <p className='text-center text-xl font-semibold'>Loading...</p>}
       <div className='container m-auto mt-2'>
         {filteredCartItems.length === 0 ? (
           <div className='text-2xl p-5 font-semibold text-blue text-center'>No items in cart</div>

@@ -7,6 +7,7 @@ function PlaceOrder() {
     const { currentUser } = useSelector((state) => state.user);
     const [cartItems, setCartItems] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [loading, setLoading] = useState(true);
     const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
     useEffect(() => {
@@ -38,6 +39,8 @@ function PlaceOrder() {
                 }
             } catch (error) {
                 console.error("Error loading cart items:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -52,7 +55,7 @@ function PlaceOrder() {
                 </Link>
                 <h2 className='font-semibold ml-1 text-2xl'>Order Summary</h2>
             </div>
-
+            {loading && <p className='text-center text-2xl font-semibold'>Loading...</p>}
             <div className={`ml-1 row row-cols-1 row-cols-md-${isMobile ? '2' : '4'}`}>
                 {cartItems.map(item => (
                     <div key={item._id} className={`col ${isMobile ? 'mb-3' : ''}`} style={{ width: isMobile ? '48%' : '20%' }}>

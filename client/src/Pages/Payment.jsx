@@ -182,8 +182,8 @@ export default function Payment() {
                 </div>
             </div >
             <div className='flex justify-center mt-4'>
-                <button className='bg-green-700 rounded-lg font-semibold uppercase p-2 text-white' onClick={handlePlaceOrder}>
-                    Confirm Order
+                <button className={`bg-green-700 rounded-lg font-semibold uppercase p-2 text-white ${loading ? 'opacity-50 pointer-events-none' : ''}`} onClick={handlePlaceOrder} disabled={loading}>
+                    {loading ? 'Placing Order...' : 'Confirm Order'} 
                 </button>
             </div>
         </div>
