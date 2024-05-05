@@ -36,10 +36,8 @@ export const Search = async (req, res, next) => {
     try {
         const { productName, productCategory, sortBy } = req.query;
         const conditions = {};
-
-        // Check if productName or productCategory exists and add to conditions accordingly
         if (productName || productCategory) {
-            conditions.$or = []; // Using $or operator to match either productName or productCategory
+            conditions.$or = [];
 
             if (productName) {
                 conditions.$or.push({ productName: { $regex: productName, $options: 'i' } });
@@ -48,8 +46,6 @@ export const Search = async (req, res, next) => {
                 conditions.$or.push({ productCategory: { $regex: productCategory, $options: 'i' } });
             }
         }
-
-        // Perform the search based on the conditions
         let searchResults;
         if (sortBy) {
             searchResults = await Listing.find(conditions).sort(sortBy);
@@ -64,4 +60,17 @@ export const Search = async (req, res, next) => {
     }
 };
 
+export const adminDeleteListing = async (req, res, next) => {
+    try {
+        const { listingId } = req.body;
+        const deletedListing = await Listing.findByIdAndDelete(listingId);
+        if (!deletedListing) {
+            return res.status(404).json({ success: false, message: "Listing not found" });
+        }
+        res.json({ success: true, message: "Listing deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting listing:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
 

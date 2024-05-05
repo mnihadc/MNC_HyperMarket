@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 function Order() {
   const { currentUser } = useSelector((state) => state.user);
@@ -13,6 +12,7 @@ function Order() {
     const fetchOrders = async () => {
       try {
         setLoading(true);
+        console.log("Fetching orders...");
         const addressRes = await fetch(`/api/user/get-addresses/${currentUser._id}`);
         const { addresses } = await addressRes.json();
         setAddresses(addresses);
@@ -41,10 +41,16 @@ function Order() {
 
   const handleDeleteOrder = async (orderId) => {
     try {
-      const res = await axios.delete(`/api/order/deleteOrder/${currentUser._id}/${orderId}`);
-      setOrders(orders.filter(order => order._id !== orderId));
+      const response = await fetch(`/api/order/deleteOrder/${orderId}`, {
+        method: 'DELETE'
+      });
+      if (response.ok) {
+        setOrders(orders.filter(order => order._id !== orderId));
+      } else {
+        console.error('Error deleting order:', response.statusText);
+      }
     } catch (error) {
-      console.error('Error deleting order:', error);
+      console.error('Error deleting order:', error.message);
     }
   };
 
@@ -55,20 +61,24 @@ function Order() {
         {loading ? (
           <div className='text-center font-semibold text-2xl'>Loading...</div>
         ) : (
-          orders.map(order => (
-            <div key={order._id} className="border border-gray-200 rounded-lg shadow-md p-4 mb-4">
-              <div className="flex justify-between items-center mb-2">
-                <h4 className="font-semibold">Delivery Time: {calculateDeliveryTime(order.createdAt)}</h4>
-                <Link to={`/order/${order._id}`} className="bg-slate-500 rounded-md font-medium text-xs p-1 text-white">View</Link>
+          orders.length > 0 ? (
+            orders.map(order => (
+              <div key={order._id} className="border border-gray-200 rounded-lg shadow-md p-4 mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="font-semibold">Delivery Time: {calculateDeliveryTime(order.createdAt)}</h4>
+                  <Link to={`/order/${order._id}`} className="bg-slate-500 rounded-md font-medium text-xs p-1 text-white">View</Link>
+                </div>
+                <p className="text-sm">Order Created At: {new Date(order.createdAt).toLocaleString()}</p>
+                <p className="text-sm">Number of Products: {order.cart.length}</p>
+                <div className="flex justify-between mt-2 gap-4">
+                  <p className="text-lg font-semibold">Total Price: ${order.totalPrice}</p>
+                  <button onClick={() => handleDeleteOrder(order._id)} className='text-white bg-red-700 rounded-md p-1 text-xs font-medium'>Delete</button>
+                </div>
               </div>
-              <p className="text-sm">Order Created At: {new Date(order.createdAt).toLocaleString()}</p>
-              <p className="text-sm">Number of Products: {order.cart.length}</p>
-              <div className="flex justify-between mt-2 gap-4">
-                <p className="text-lg font-semibold">Total Price: ${order.totalPrice}</p>
-                <button onClick={() => handleDeleteOrder(order._id)} className='text-white bg-red-700 rounded-md p-1 text-xs font-medium'>Delete</button>
-              </div>
-            </div>
-          ))
+            ))
+          ) : (
+            <div className="p-3 text-center text-2xl">No orders found</div>
+          )
         )}
       </div>
     </div>

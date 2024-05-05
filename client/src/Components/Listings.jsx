@@ -92,7 +92,25 @@ const SupermarketListing = ({ searchResults }) => {
             console.error("Error adding to cart:", error);
         }
     };
-
+    const handleDeleteListing = async (listingId) => {
+        try {
+            const res = await fetch('/api/listing/adminDeleteListing', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ listingId }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setListing(prevListing => prevListing.filter(listing => listing._id !== listingId));
+            } else {
+                console.error("Failed to delete listing:", data.message);
+            }
+        } catch (error) {
+            console.error("Error deleting listing:", error);
+        }
+    };
     const renderListings = () => {
         if (!listing) {
             return null;
@@ -121,7 +139,16 @@ const SupermarketListing = ({ searchResults }) => {
                                 <p className="text-center card-title font-semibold text-1xl" style={{ overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitBoxOrient: "vertical", maxHeight: "4em" }}>
                                     {product.productName}
                                 </p>
-                                <p>{product.quantity[0]}</p>
+                                <div className='text-center flex justify-center'>
+                                    <p className='text-center'>{product.quantity[0]}</p>
+                                    {currentUser.isAdmin && (
+                                        <button
+                                            className={`btn btn-danger justify-center p-1 text-sm`}
+                                            onClick={() => handleDeleteListing(product._id)}>
+                                            Delete
+                                        </button>
+                                    )}
+                                </div>
                                 <div className='flex justify-center gap-2'>
                                     <p className="card-title text-center" style={{ textDecoration: 'line-through' }}>
                                         ₹{product.mrp[0]}
