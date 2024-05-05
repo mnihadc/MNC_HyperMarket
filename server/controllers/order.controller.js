@@ -34,15 +34,25 @@ export const getOrders = async (req, res, next) => {
 
 export const getOrdersDetails = async (req, res) => {
     try {
-      const orderId = req.params.orderId;
-      const order = await Order.findById(orderId);
-      if (!order) {
-        return res.status(404).json({ message: 'Order not found' });
-      }
-      res.json(order);
+        const orderId = req.params.orderId;
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+        res.json(order);
     } catch (error) {
-      console.error('Error fetching order details:', error);
-      res.status(500).json({ message: 'Internal server error' });
+        console.error('Error fetching order details:', error);
+        res.status(500).json({ message: 'Internal server error' });
     }
-  };
+};
 
+export const deleteOrder = async (req, res, next) => {
+    try {
+        const { userId, orderId } = req.params;
+        await Order.findOneAndDelete({ _id: orderId, userId: userId });
+        res.status(200).json({ message: 'Order deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting order:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};

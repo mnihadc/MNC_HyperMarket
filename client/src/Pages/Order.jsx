@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function Order() {
   const { currentUser } = useSelector((state) => state.user);
@@ -38,6 +39,15 @@ function Order() {
     return orderTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
+  const handleDeleteOrder = async (orderId) => {
+    try {
+      const res = await axios.delete(`/api/order/deleteOrder/${currentUser._id}/${orderId}`);
+      setOrders(orders.filter(order => order._id !== orderId));
+    } catch (error) {
+      console.error('Error deleting order:', error);
+    }
+  };
+
   return (
     <div className="pt-16">
       <h1 className="p-2 mt-3 ml-3 text-2xl font-bold">Orders</h1>
@@ -53,8 +63,9 @@ function Order() {
               </div>
               <p className="text-sm">Order Created At: {new Date(order.createdAt).toLocaleString()}</p>
               <p className="text-sm">Number of Products: {order.cart.length}</p>
-              <div className="flex mt-2 gap-4">
+              <div className="flex justify-between mt-2 gap-4">
                 <p className="text-lg font-semibold">Total Price: ${order.totalPrice}</p>
+                <button onClick={() => handleDeleteOrder(order._id)} className='text-white bg-red-700 rounded-md p-1 text-xs font-medium'>Delete</button>
               </div>
             </div>
           ))
