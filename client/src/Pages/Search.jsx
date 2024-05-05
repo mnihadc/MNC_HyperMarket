@@ -16,6 +16,7 @@ function Search() {
       const response = await axios.get('/api/listing/search', {
         params: {
           productName: searchTerm,
+          productCategory: searchTerm,
           sortBy
         }
       });

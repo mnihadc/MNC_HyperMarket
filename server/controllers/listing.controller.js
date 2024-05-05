@@ -34,11 +34,22 @@ export const showListings = async (req, res, next) => {
 
 export const Search = async (req, res, next) => {
     try {
-        const { productName, sortBy } = req.query;
+        const { productName, productCategory, sortBy } = req.query;
         const conditions = {};
-        if (productName) {
-            conditions.productName = { $regex: productName, $options: 'i' };
+
+        // Check if productName or productCategory exists and add to conditions accordingly
+        if (productName || productCategory) {
+            conditions.$or = []; // Using $or operator to match either productName or productCategory
+
+            if (productName) {
+                conditions.$or.push({ productName: { $regex: productName, $options: 'i' } });
+            }
+            if (productCategory) {
+                conditions.$or.push({ productCategory: { $regex: productCategory, $options: 'i' } });
+            }
         }
+
+        // Perform the search based on the conditions
         let searchResults;
         if (sortBy) {
             searchResults = await Listing.find(conditions).sort(sortBy);
@@ -52,3 +63,5 @@ export const Search = async (req, res, next) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+

@@ -39,7 +39,7 @@ function SignIn() {
     }
   }
   return (
-    <div className='p-1' style={{ background: "#90fab7", height: "42rem" }}>
+    <div className='p-1' style={{ background: "#90fab7", height: "55rem" }}>
       <div className='p-10 max-w-lg mx-auto border rounded-lg' style={{ marginTop: "7rem", background: "#39383d" }}>
         <h1 className='text-3xl my-7 text-center font-semibold' style={{ color: "#fff" }}>Sign-In</h1>
         <form onSubmit={handleSubmit} className='flex flex-col gap-4 '>
