@@ -7,6 +7,7 @@ import listingRouter from './routes/listing.route.js';
 import cartRouter from './routes/cart.route.js';
 import orderRouter from './routes/order.route.js';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 
 dotenv.config();
 mongoose.connect(process.env.MONGO)
@@ -16,7 +17,7 @@ mongoose.connect(process.env.MONGO)
     .catch((err) => {
         console.log("error  in connection to mongodb", err);
     })
-
+const __dirname = path.resolve();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -26,6 +27,11 @@ app.use('/api/user', userRouter);
 app.use('/api/listing', listingRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/order', orderRouter);
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+})
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000!');

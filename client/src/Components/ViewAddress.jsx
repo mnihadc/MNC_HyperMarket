@@ -1,7 +1,6 @@
 import React from 'react';
 
 const ViewAddress = ({ address, onClose }) => {
-    console.log(address);
     const createdDate = new Date(address.createdAt).toLocaleDateString();
     const updatedDate = new Date(address.updatedAt).toLocaleDateString();
     return (
