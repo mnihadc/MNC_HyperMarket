@@ -19,7 +19,7 @@ function About() {
           <div className='p-2'>
             <h2 className='p-1 text-lg font-semibold'>Owners, Chairman, and CEO:</h2>
             <p className='ml-3'>
-              Our company is led by a dynamic team of visionaries. Muhammad  serves as our esteemed Chairman, providing strategic direction and leadership. Assisting him is Suhail, the Assistant Chairman, who contributes invaluable insights and support. At the helm of operations is Adil and Jazeem, our CEO, whose innovative approach drives our success. Together, they form the backbone of our organization, steering us towards greater achievements.
+              Our company is led by a dynamic team of visionaries. Muhammad PN serves as our esteemed Chairman, providing strategic direction and leadership. Assisting him is Suhail, the Assistant Chairman, who contributes invaluable insights and support. At the helm of operations is Adil and Jazeem, our CEO, whose innovative approach drives our success. Together, they form the backbone of our organization, steering us towards greater achievements.
             </p>
           </div>
           <div className='p-2'>
