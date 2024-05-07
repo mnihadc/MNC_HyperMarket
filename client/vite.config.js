@@ -21,4 +21,6 @@ export default defineConfig({
       },
     },
   },
+  // Add this to print plugin debug info
+  logLevel: 'debug',
 });
