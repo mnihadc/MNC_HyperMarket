@@ -17,7 +17,6 @@ mongoose.connect(process.env.MONGO)
     .catch((err) => {
         console.log("error  in connection to mongodb", err);
     })
-
 const __dirname = path.resolve();
 const app = express();
 app.use(express.json());
@@ -32,7 +31,11 @@ app.use('/api/order', orderRouter);
 app.use(express.static(path.join(__dirname, '/client/dist')));
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-});
+})
+
+app.listen(3000, () => {
+    console.log('Server is running on port 3000!');
+})
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
@@ -41,10 +44,5 @@ app.use((err, req, res, next) => {
         success: false,
         statusCode,
         message,
-    });
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}!`);
-});
+    })
+})
