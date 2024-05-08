@@ -12,7 +12,8 @@ function Cart() {
 
   useEffect(() => {
     const fetchCart = async () => {
-      if (!currentUser) return; // Ensure currentUser is not null
+      // Ensure currentUser is not null
+      if (!currentUser) return;
 
       try {
         const cartRes = await fetch(`/api/cart/getCart/${currentUser._id}`);
@@ -43,73 +44,6 @@ function Cart() {
 
     fetchCart();
   }, [currentUser]);
-
-  const increaseQuantity = (itemId) => {
-    const updatedCartItems = filteredCartItems.map(item => {
-      if (item._id === itemId) {
-        const newQuantity = item.cartQuantity + 1;
-        updateCartItemQuantity(currentUser._id, itemId, newQuantity);
-        return { ...item, cartQuantity: newQuantity };
-      }
-      return item;
-    });
-    setFilteredCartItems(updatedCartItems);
-    updateTotalPrice(updatedCartItems);
-  };
-
-  const decreaseQuantity = (itemId) => {
-    const updatedCartItems = filteredCartItems.map(item => {
-      if (item._id === itemId && item.cartQuantity > 1) {
-        const newQuantity = item.cartQuantity - 1;
-        updateCartItemQuantity(currentUser._id, itemId, newQuantity);
-        return { ...item, cartQuantity: newQuantity };
-      }
-      return item;
-    });
-    setFilteredCartItems(updatedCartItems);
-    updateTotalPrice(updatedCartItems);
-  };
-
-  const updateCartItemQuantity = async (userId, itemId, newQuantity) => {
-    try {
-      const response = await fetch(`/api/cart/updateCartQuantity/${userId}/${itemId}`, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ quantity: newQuantity }),
-      });
-      if (response.ok) {
-        // Quantity updated successfully
-      } else {
-        console.error('Failed to update quantity');
-      }
-    } catch (error) {
-      console.error('Error updating quantity:', error);
-    }
-  };
-
-  const updateTotalPrice = (updatedCartItems) => {
-    const total = updatedCartItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);
-    setTotalPrice(total);
-  };
-
-  const handleRemoveCartProduct = async (itemId) => {
-    try {
-      const response = await fetch(`/api/cart/removeCartProduct/${currentUser._id}/${itemId}`, {
-        method: 'DELETE',
-      });
-      if (response.ok) {
-        const updatedCartItems = filteredCartItems.filter(item => item._id !== itemId);
-        setFilteredCartItems(updatedCartItems);
-        updateTotalPrice(updatedCartItems);
-      } else {
-        console.error('Failed to remove item from cart');
-      }
-    } catch (error) {
-      console.error('Error removing item from cart:', error);
-    }
-  };
 
   // Handle loading state
   if (loading) {
