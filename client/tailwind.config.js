@@ -1,8 +1,6 @@
-// tailwind.config.js
+import { defineConfig } from 'tailwindcss';
 
-const { defineConfig } = require('tailwindcss');
-
-module.exports = defineConfig({
+export default defineConfig({
   content: [
     "./index.html",
     "./src/**/*.{js,jsx,ts,tsx}",
