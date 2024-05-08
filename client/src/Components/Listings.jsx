@@ -142,7 +142,7 @@ const SupermarketListing = ({ searchResults }) => {
                                 </p>
                                 <div className='text-center flex justify-center'>
                                     <p className='text-center'>{product.quantity[0]}</p>
-                                    {currentUser.isAdmin && (
+                                    {currentUser && currentUser.isAdmin && (
                                         <button
                                             className={`btn btn-danger justify-center p-1 text-sm`}
                                             onClick={() => handleDeleteListing(product._id)}>
