@@ -4,17 +4,16 @@ import { useMediaQuery } from 'react-responsive';
 import { Link } from 'react-router-dom';
 
 function Cart() {
-  const { currentUser, loading } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
   const [filteredCartItems, setFilteredCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
 
   useEffect(() => {
     const fetchCart = async () => {
-      // Ensure currentUser is not null or undefined
-      if (!currentUser) return;
-
+      setLoading(true);
       try {
         const cartRes = await fetch(`/api/cart/getCart/${currentUser._id}`);
         const productRes = await fetch('/api/cart/getCartProduct');
@@ -33,25 +32,141 @@ function Cart() {
           const total = filteredItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);
           setTotalPrice(total);
           setFilteredCartItems(filteredItems);
+
         } else {
           setFilteredCartItems([]);
           setTotalPrice(0);
         }
       } catch (error) {
         console.error("Error loading in Cart:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchCart();
   }, [currentUser]);
 
-  // Handle loading state
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const increaseQuantity = (itemId) => {
+    const updatedCartItems = filteredCartItems.map(item => {
+      if (item._id === itemId) {
+        const newQuantity = item.cartQuantity + 1;
+        updateCartItemQuantity(currentUser._id, itemId, newQuantity);
+        return { ...item, cartQuantity: newQuantity };
+      }
+      return item;
+    });
+    setFilteredCartItems(updatedCartItems);
+    updateTotalPrice(updatedCartItems);
+  };
+
+  const decreaseQuantity = (itemId) => {
+    const updatedCartItems = filteredCartItems.map(item => {
+      if (item._id === itemId && item.cartQuantity > 1) {
+        const newQuantity = item.cartQuantity - 1;
+        updateCartItemQuantity(currentUser._id, itemId, newQuantity);
+        return { ...item, cartQuantity: newQuantity };
+      }
+      return item;
+    });
+    setFilteredCartItems(updatedCartItems);
+    updateTotalPrice(updatedCartItems);
+  };
+
+  const updateCartItemQuantity = async (userId, itemId, newQuantity) => {
+    try {
+      const response = await fetch(`/api/cart/updateCartQuantity/${userId}/${itemId}`, {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ quantity: newQuantity }),
+      });
+      if (response.ok) {
+        // Quantity updated successfully
+      } else {
+        console.error('Failed to update quantity');
+      }
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+    }
+  };
+
+  const handleChangeSize = async (itemId, newSize) => {
+    try {
+      const response = await fetch(`/api/cart/updateCartProductSize/${currentUser._id}/${itemId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ size: newSize }),
+      });
+      if (response.ok) {
+        const updatedCartItems = filteredCartItems.map(item => {
+          if (item._id === itemId) {
+            const selectedIndex = item.quantity.indexOf(newSize);
+            const newMrp = item.mrp[selectedIndex];
+            const newOfferPrice = item.offerPrice[selectedIndex];
+            updateCartPrice(itemId, newOfferPrice, newMrp);
+            return { ...item, size: newSize, selectedSize: selectedIndex, mrP: newMrp, offerprice: newOfferPrice };
+          }
+          return item;
+        });
+        setFilteredCartItems(updatedCartItems);
+        const total = updatedCartItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);
+        setTotalPrice(total);
+      } else {
+        console.error('Failed to update size');
+      }
+    } catch (error) {
+      console.error('Error updating size:', error);
+    }
+  };
+
+  const updateTotalPrice = (updatedCartItems) => {
+    const total = updatedCartItems.reduce((acc, item) => acc + item.offerprice * item.cartQuantity, 0);
+    setTotalPrice(total);
+  };
+
+  const updateCartPrice = async (itemId, newOfferPrice, newMrP) => {
+    try {
+      const response = await fetch(`/api/cart/updateCartPrice/${currentUser._id}/${itemId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ offerprice: newOfferPrice, mrP: newMrP }),
+      });
+      if (response.ok) {
+        // Price updated successfully
+      } else {
+        console.error('Failed to update price');
+      }
+    } catch (error) {
+      console.error('Error updating price:', error);
+    }
+  };
+
+  const handleRemoveCartProduct = async (itemId) => {
+    try {
+      const response = await fetch(`/api/cart/removeCartProduct/${currentUser._id}/${itemId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        const updatedCartItems = filteredCartItems.filter(item => item._id !== itemId);
+        setFilteredCartItems(updatedCartItems);
+        updateTotalPrice(updatedCartItems);
+      } else {
+        console.error('Failed to remove item from cart');
+      }
+    } catch (error) {
+      console.error('Error removing item from cart:', error);
+    }
+  };
 
   return (
     <div className='pt-20'>
+      {loading && <p className='text-center text-xl font-semibold'>Loading...</p>}
       <div className='container m-auto mt-2'>
         {filteredCartItems.length === 0 ? (
           <div className='text-2xl p-5 font-semibold text-blue text-center'>No items in cart</div>
