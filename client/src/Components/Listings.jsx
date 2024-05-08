@@ -18,6 +18,7 @@ const SupermarketListing = ({ searchResults }) => {
     useEffect(() => {
         const fetchCartData = async () => {
             try {
+                if (!currentUser) return; //
                 const cartsRes = await fetch(`/api/cart/getCart/${currentUser._id}`);
                 const cartData = await cartsRes.json();
                 const productsInCartIds = cartData.map(item => item.productId);

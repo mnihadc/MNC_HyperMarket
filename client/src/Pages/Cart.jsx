@@ -12,7 +12,7 @@ function Cart() {
 
   useEffect(() => {
     const fetchCart = async () => {
-      // Ensure currentUser is not null
+      // Ensure currentUser is not null or undefined
       if (!currentUser) return;
 
       try {
