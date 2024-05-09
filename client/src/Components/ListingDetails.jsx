@@ -8,7 +8,7 @@ function ListingDetails({ product, onClose }) {
     return (
         <div className='text-white'>
             <button className='btn bg-danger fs-4' style={{ position: 'absolute', top: 10, right: 10 }} onClick={onClose}> X </button>
-            <div className='p-14'>
+            <div className='p-6'>
                 <Swiper navigation>
                     {imageUrls.map((url, index) => (
                         <SwiperSlide key={index}>
@@ -17,7 +17,8 @@ function ListingDetails({ product, onClose }) {
                                 style={{
                                     background: `url(${url}) center no-repeat`,
                                     backgroundSize: 'contain',
-                                    height: '300px', 
+                                    height: '220px', 
+                                    width:'200',
                                 }}
                             ></div>
                         </SwiperSlide>
