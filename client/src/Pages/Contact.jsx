@@ -12,7 +12,7 @@ function Contact() {
                     <h1 className='text-2xl font-semibold mb-4'>Contact Page</h1>
                     <div>
                         <p className='mb-4'>
-                            For inquiries, you can reach us via email at <a href='mncnihad@gmail.com' className='text-blue-500'>info@example.com</a>.
+                            For inquiries, you can reach us via email at <a href='mncnihad@gmail.com' className='text-blue-500'>MNCgroupOfCompany@gmail.com</a>.
                         </p>
                         <p>
                             Our office address: <br />

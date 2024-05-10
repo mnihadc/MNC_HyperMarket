@@ -48,7 +48,7 @@ function PlaceOrder() {
     }, [currentUser]);
 
     return (
-        <div className='pt-16'>
+        <div className='pt-16 pb-12'>
             <div className="flex items-center mb-1 p-3">
                 <Link to={'/cart'}>
                     <button className='text-5xl ml-2 p-2 mb-2'>&#8592;</button>
@@ -60,29 +60,21 @@ function PlaceOrder() {
                 {cartItems.map(item => (
                     <div key={item._id} className={`col ${isMobile ? 'mb-3' : ''}`} style={{ width: isMobile ? '48%' : '20%' }}>
                         <div className='card p-2 bg-blue-200'>
-                            <div className='flex'>
-                                <img src={item.imageUrls} className='card-img-top w-32 h-32' alt='Default' />
-                                <div className='p-2 ml-5'>
-                                    <h3 className='p-1 card-title font-semibold'>{item.productName}</h3>
-                                    <p className='card-text p-1'>
-                                        Quantity:
-                                        <span style={{ marginRight: '5px' }}></span>
-                                        {item.quantity}
-                                    </p>
-                                    <p className='card-text p-1'>
-                                        Size:
-                                        <span style={{ marginRight: '5px' }}></span>
-                                        {item.size}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className='card-body flex justify-center gap-3'>
-                                <div>
-                                    <div className='flex gap-2'>
-                                        <p className='card-text text-decoration-line-through'>MRP: ₹{item.mrP}</p>
-                                        <p className='card-text font-semibold'>offerPrice: ₹{item.offerprice}</p>
-                                    </div>
-                                </div>
+                            <img src={item.imageUrls} className='card-img-top w-32 h-32' alt='Default' />
+                            <div className='card-body'>
+                                <h3 className='card-title font-semibold'>{item.productName}</h3>
+                                <p className='card-text'>
+                                    <span className='font-semibold'>Size:</span> {item.size}
+                                </p>
+                                <p className='card-text'>
+                                    <span className='font-semibold'>Quantity:</span> {item.quantity}
+                                </p>
+                                <p className='card-text'>
+                                    <span className='font-semibold'>MRP:</span> ₹{item.mrP}
+                                </p>
+                                <p className='card-text'>
+                                    <span className='font-semibold'>Offer Price:</span> ₹{item.offerprice}
+                                </p>
                             </div>
                         </div>
                     </div>

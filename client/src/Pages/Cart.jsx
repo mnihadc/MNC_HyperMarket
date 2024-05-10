@@ -175,46 +175,38 @@ function Cart() {
             {filteredCartItems.map((item, index) => (
               <div key={item._id} className={`col ${isMobile ? 'mb-3' : ''}`} style={{ width: isMobile ? '50%' : '25%' }}>
                 <div className='card p-2 bg-blue-200'>
-                  <div className='flex'>
-                    <img src={item.imageUrls} className='card-img-top w-24 h-24' alt='Default' />
-                    <div className='p-2'>
-                      <h3 className='card-title font-semibold'>{item.productName}</h3>
-                      <p className='card-text'>Description: {item.description}</p>
-
-                      <select
-                        value={item.size}
-                        className="form-select w-24 h-9"
-                        onChange={(e) => handleChangeSize(item._id, e.target.value)}
-                      >
-                        {item.quantity && item.quantity.map((size, i) => (
-                          <option key={size} value={size}>
-                            {size}
-                          </option>
-                        ))}
-                      </select>
-
-                    </div>
-                  </div>
-                  <div className='card-body flex gap-3'>
-                    <div>
+                  <img src={item.imageUrls} className='card-img-top w-100' alt='Product' />
+                  <div className='card-body'>
+                    <h5 className='card-title font-semibold'>{item.productName}</h5>
+                    <p className='card-text'>Category: {item.productCategory}</p>
+                    <select
+                      value={item.size}
+                      className="form-select mb-2"
+                      onChange={(e) => handleChangeSize(item._id, e.target.value)}
+                    >
+                      {item.quantity && item.quantity.map((size, i) => (
+                        <option key={size} value={size}>
+                          {size}
+                        </option>
+                      ))}
+                    </select>
+                    <div className=' align-items-center'>
                       <div className=''>
                         <p className='card-text'>
-                          Quantity:
                           <span style={{ marginRight: '5px' }}></span>
                           <span className='quantity-button' style={{ marginRight: '5px', width: '20px', height: '20px', backgroundColor: '#006400', color: '#ffffff', borderRadius: '50%', display: 'inline-flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer' }} onClick={() => decreaseQuantity(item._id)}>-</span>
                           {item.cartQuantity}
                           <span className='quantity-button' style={{ marginLeft: '5px', marginRight: '5px', width: '20px', height: '20px', backgroundColor: '#006400', color: '#ffffff', borderRadius: '50%', display: 'inline-flex', justifyContent: 'center', alignItems: 'center', cursor: 'pointer' }} onClick={() => increaseQuantity(item._id)}>+</span>
                         </p>
                       </div>
-                      <div className='flex gap-2'>
-                        <p className='card-text text-decoration-line-through'>MRP: ₹{item.mrP}</p>
-                        <p className='card-text font-semibold'>offerPrice: ₹{item.offerprice}</p>
+                      <div>
+                        <p className='text-decoration-line-through mb-0'>MRP: ₹{item.mrP}</p>
+                        <p className='font-semibold'>Offer Price: ₹{item.offerprice}</p>
                       </div>
-
                     </div>
-                    <div>
-                      <button type='button' className='bg-slate-500 rounded-lg text-white w-20 h-10' onClick={() => handleRemoveCartProduct(item._id)}>Remove</button>
-                    </div>
+                  </div>
+                  <div className='card-footer'>
+                    <button type='button' className='btn btn-danger w-100 text-black' onClick={() => handleRemoveCartProduct(item._id)}>Remove</button>
                   </div>
                 </div>
               </div>

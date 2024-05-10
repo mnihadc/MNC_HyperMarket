@@ -41,7 +41,7 @@ function ContinueOrder() {
             </div>
             {loading && <p className='text-center text-xl font-semibold'>Loading...</p>}
             <div className="my-4 flex justify-center">
-                <div className='text-center bg-gray-200 border-2 border-blue-700 rounded-lg p-4' style={{ width: '40%' }}>
+                <div className='text-center bg-gray-200 border-2 border-blue-700 rounded-lg p-4' style={{ width: '70%', padding: '20px' }}>
                     {address && (
                         <div className='gap-2'>
                             <h3 className="font-semibold p-2">Delivery Address</h3>

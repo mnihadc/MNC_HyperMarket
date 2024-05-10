@@ -136,10 +136,11 @@ const SupermarketListing = ({ searchResults }) => {
                                 onClick={() => handleProductClick(product._id)}
                                 style={{ height: "150px", width: "170px", margin: "auto" }}
                             />
-                            <div className="text-center" style={{ height: "80px" }}>
-                                <p className="text-center card-title font-semibold text-1xl" style={{ overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitBoxOrient: "vertical", maxHeight: "4em" }}>
+                            <div className="text-center" style={{ height: "100px" }}>
+                                <p className="text-center card-title font-semibold text-1xl" style={{ overflow: "hidden", textOverflow: "ellipsis", display: "-webkit-box", WebkitBoxOrient: "vertical", maxHeight: "2em", WebkitLineClamp: 2 }}>
                                     {product.productName}
                                 </p>
+
                                 <div className='text-center flex justify-center'>
                                     <p className='text-center'>{product.quantity[0]}</p>
                                     {currentUser && currentUser.isAdmin && (

@@ -7,7 +7,7 @@ function ListingDetails({ product, onClose }) {
 
     return (
         <div className='text-white'>
-            <button className='btn bg-danger fs-4' style={{ position: 'absolute', top: 10, right: 10 }} onClick={onClose}> X </button>
+            <button className='btn bg-danger fs-4' style={{ position: 'absolute', top: 10, right: 10, zIndex: 999 }} onClick={onClose}> X </button>
             <div className='p-6'>
                 <Swiper navigation>
                     {imageUrls.map((url, index) => (
@@ -18,27 +18,28 @@ function ListingDetails({ product, onClose }) {
                                     background: `url(${url}) center no-repeat`,
                                     backgroundSize: 'contain',
                                     height: '220px', 
-                                    width:'200',
+                                    width: '100%', 
                                 }}
                             ></div>
                         </SwiperSlide>
                     ))}
                 </Swiper>
 
-                <h2 className="text-center font-semibold text-2xl ">{productName}</h2>
-                <p className='text-center pt-2'>{description}</p>
-                <p className='text-center'>{productCategory}</p>
-                <div className="flex justify-center gap-4 mt-6">
+                <h2 className="text-center font-semibold text-2xl mt-4">{productName}</h2>
+                <p className='text-center'>{description}</p>
+                <p className='text-center mb-4'>{productCategory}</p>
+                
+                <div className="flex justify-center gap-4 mt-4">
                     <div>
-                        <h3 className='' style={{ textDecoration: 'line-through', textDecorationColor: 'black' }}>MRP:</h3>
+                        <h3 className='text-gray-400'>MRP:</h3>
                         {mrp.map((price, index) => (
-                            <p className='' style={{ textDecoration: 'line-through', textDecorationColor: 'black' }} key={index}>{quantity[index]} - ₹{price}</p>
+                            <p key={index} className='text-gray-400'>{quantity[index]} - ₹{price}</p>
                         ))}
                     </div>
                     <div>
-                        <h3>Offer Price:</h3>
+                        <h3 className='text-green-600'>Offer Price:</h3>
                         {offerPrice.map((price, index) => (
-                            <p key={index}>{quantity[index]} - ₹{price}</p>
+                            <p key={index} className='text-green-500'>{quantity[index]} - ₹{price}</p>
                         ))}
                     </div>
                 </div>

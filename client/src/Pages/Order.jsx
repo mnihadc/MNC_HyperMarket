@@ -71,8 +71,10 @@ function Order() {
                 <p className="text-sm">Order Created At: {new Date(order.createdAt).toLocaleString()}</p>
                 <p className="text-sm">Number of Products: {order.cart.length}</p>
                 <div className="flex justify-between mt-2 gap-4">
-                  <p className="text-lg font-semibold">Total Price: ${order.totalPrice}</p>
-                  <button onClick={() => handleDeleteOrder(order._id)} className='text-white bg-red-700 rounded-md p-1 text-xs font-medium'>Delete</button>
+                  <p className="text-lg font-semibold">Total Price: ₹{order.totalPrice}/-</p>
+                  <div>
+                    <button onClick={() => handleDeleteOrder(order._id)} className='text-white bg-red-700 rounded-md p-1 text-xs font-medium '>Delete</button>
+                  </div>
                 </div>
               </div>
             ))
